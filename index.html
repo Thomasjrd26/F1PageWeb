@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paddock F1 2026 — Hub Officiel Local</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Titillium+Web:ital,wght@0,600;0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="brand">PAD<span>DOCK</span> // 2026</div>
+    <div class="live" id="navLive">
+      <span class="n" id="navNum">16</span>
+      <span class="name" id="navName">Charles Leclerc</span>
+    </div>
+  </nav>
+
+  <!-- SECTION 1 : DIRECT CANAL+ & LIVE HUB -->
+  <section class="broadcast-section" id="sectionDirect">
+    <div class="broadcast-header">
+      <h2>DIRECT CANAL+ & LIVE PADDOCK 2026</h2>
+      <p class="live-status"><span class="pulse-dot"></span> PROCHAINE ÉPREUVE : GP D'ESPAGNE (MADRID) — 11-13 SEPTEMBRE 2026</p>
+    </div>
+
+    <div class="broadcast-grid">
+      <!-- Lecteur Video Canal+ -->
+      <div class="video-container">
+        <div class="video-player">
+          <div class="canal-badge">
+            <span class="c-logo">CANAL+</span>
+            <span class="badge-live">DIRECT F1</span>
+          </div>
+          <div class="player-overlay">
+            <h3>CONNECTEZ-VOUS À MYCANAL</h3>
+            <p>Accédez au flux vidéo HD en direct, aux chronos officiels et aux angles caméra embarquée.</p>
+            <a href="https://www.canalplus.com/" target="_blank" rel="noopener noreferrer" class="btn-canal">
+              Lancer le Direct sur myCANAL
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Info Panel -->
+      <div class="live-info-panel">
+        <div class="panel-tabs">
+          <button class="tab-btn active" onclick="switchTab('drivers')">Pilotes</button>
+          <button class="tab-btn" onclick="switchTab('constructors')">Constructeurs</button>
+          <button class="tab-btn" onclick="switchTab('races')">Calendrier Officiel FIA (24 GP)</button>
+        </div>
+
+        <!-- Classement Pilotes -->
+        <div class="tab-content active" id="tabDrivers">
+          <table class="live-table">
+            <thead>
+              <tr>
+                <th>POS</th>
+                <th>PILOTE</th>
+                <th>ÉCURIE</th>
+                <th style="text-align:right">PTS (DERNIER GP)</th>
+              </tr>
+            </thead>
+            <tbody id="driversTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Classement Constructeurs -->
+        <div class="tab-content" id="tabConstructors">
+          <table class="live-table">
+            <thead>
+              <tr>
+                <th>POS</th>
+                <th>ÉCURIE</th>
+                <th>MOTEUR</th>
+                <th style="text-align:right">PTS TOTAL</th>
+              </tr>
+            </thead>
+            <tbody id="constructorsTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Calendrier 24 GP -->
+        <div class="tab-content" id="tabRaces">
+          <div class="races-scroll-container" id="racesScrollContainer">
+            <div class="scroll-hint-up" onclick="scrollToCurrentRace()">🎯 PROCHAIN GP EN DIRECT : MADRID (11-13 SEPT)</div>
+            <div id="racesAccordionList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="#sectionDrivers" class="scroll-indicator down">
+      <span>Défilez vers le bas pour explorer la grille et la sélection des pilotes</span>
+      <span class="chevron-down"></span>
+    </a>
+  </section>
+
+  <!-- SECTION 2 : CAROUSEL HORIZONTAL DES PILOTES -->
+  <section class="grid-select" id="sectionDrivers"></section>
+
+  <!-- SECTION 3 : ATELIER INTERACTIF MONOPLACE -->
+  <section class="garage-section" id="sectionGarage">
+    <a href="#sectionDirect" class="scroll-indicator up">
+      <span class="chevron-up"></span>
+      <span>Défilez vers le haut pour remonter au Direct &amp; Classements</span>
+    </a>
+
+    <div class="garage-header">
+      <div>
+        <h3>L'Atelier Technique — Monoplace <span id="garageDriverName">Scuderia Ferrari</span></h3>
+        <p style="font-size:13px; color:var(--ink-dim);">Cliquez sur les points interactifs pour analyser l'aérodynamique et les composants.</p>
+      </div>
+    </div>
+
+    <div class="garage-stage">
+      <img id="garageCarImg" class="real-car-backdrop" src="images/cars/ferrari.svg" alt="Monoplace F1 Officielle" onerror="this.src='images/cars/default.svg'">
+      
+      <!-- Hotspots -->
+      <button class="hotspot-btn" style="left: 52%; top: 48%;" onclick="openHotspotModal('moteur')"><span>Groupe Propulseur</span></button>
+      <button class="hotspot-btn" style="left: 14%; top: 70%;" onclick="openHotspotModal('aileronAvant')"><span>Aileron Avant</span></button>
+      <button class="hotspot-btn" style="left: 84%; top: 38%;" onclick="openHotspotModal('aileronArriere')"><span>Aileron Arrière &amp; DRS</span></button>
+      <button class="hotspot-btn" style="left: 42%; top: 35%;" onclick="openHotspotModal('halo')"><span>Halo &amp; Cockpit</span></button>
+      <button class="hotspot-btn" style="left: 76%; top: 72%;" onclick="openHotspotModal('pneus')"><span>Pneus Pirelli</span></button>
+    </div>
+
+    <a href="#sectionDrivers" class="scroll-indicator down">
+      <span>Défilez vers le haut pour retourner aux pilotes</span>
+      <span class="chevron-up"></span>
+    </a>
+  </section>
+
+  <div class="backdrop" id="backdrop" onclick="closeModal()"></div>
+
+  <!-- MODALS -->
+  <aside class="detail-panel" id="driverPerfPanel">
+    <button class="close" onclick="closeModal()">&times;</button>
+    <div class="kicker" id="dpKicker">FICHE PILOTE</div>
+    <h3 id="dpTitle">—</h3>
+    <p class="desc" id="dpTeam"></p>
+    <div class="bio-box" id="dpBio"></div>
+    <div class="detail-stats" id="dpStats"></div>
+    
+    <h4 style="margin-top:24px; font-size:14px; color:var(--ink-dim);">POINTS GAGNÉS PAR GRAND PRIX</h4>
+    <div class="recent-races-list" id="dpRecentRaces"></div>
+  </aside>
+
+  <aside class="detail-panel" id="teamPerfPanel">
+    <button class="close" onclick="closeModal()">&times;</button>
+    <div class="kicker" id="tpKicker">FICHE ÉCURIE</div>
+    <h3 id="tpTitle">—</h3>
+    <p class="desc" id="tpEngine"></p>
+    <div class="bio-box" id="tpBio"></div>
+    <div class="detail-stats" id="tpStats"></div>
+  </aside>
+
+  <aside class="detail-panel" id="techPanel">
+    <button class="close" onclick="closeModal()">&times;</button>
+    <div class="kicker" id="techKicker">COMPOSANT TECHNIQUE</div>
+    <h3 id="techTitle">—</h3>
+    <p class="desc" id="techDesc"></p>
+    <div class="detail-stats" id="techStats"></div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
