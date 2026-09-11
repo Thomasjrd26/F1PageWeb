@@ -32,25 +32,50 @@ body {
 h1, h2, h3, h4, .display { font-family: 'Titillium Web', sans-serif; }
 button { font-family: inherit; cursor: pointer; }
 
+/* NAV & MENU DÉROULANT PILOTE */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px clamp(20px, 5vw, 56px);
-  background: rgba(18, 22, 34, 0.94); backdrop-filter: blur(16px);
+  padding: 12px clamp(16px, 4vw, 48px);
+  background: rgba(18, 22, 34, 0.95); backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);
+  gap: 12px;
 }
-.nav .brand { font-weight: 900; font-size: 16px; letter-spacing: .12em; color: var(--ink); }
+.nav .brand { font-weight: 900; font-size: 16px; letter-spacing: .12em; color: var(--ink); white-space: nowrap; }
 .nav .brand span { color: var(--accent); }
+
+.driver-dropdown-wrapper { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.08); padding: 4px 12px; border-radius: 8px; border: 1px solid var(--line); }
+.driver-dropdown-label { font-size: 11px; font-weight: 800; color: var(--accent-2); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+.driver-select-nav {
+  background: var(--panel-2); color: #ffffff; border: 1px solid var(--accent);
+  padding: 6px 12px; border-radius: 6px; font-weight: 800; font-size: 13px;
+  outline: none; cursor: pointer; max-width: 220px; text-overflow: ellipsis;
+  transition: all 0.3s ease;
+}
+.driver-select-nav:hover, .driver-select-nav:focus { box-shadow: 0 0 12px var(--accent); border-color: #fff; }
+
 .nav .live {
   display: flex; align-items: center; gap: 8px;
   font-family: 'Titillium Web', sans-serif; font-weight: 700;
-  padding: 6px 16px; border: 1px solid var(--accent); border-radius: 999px;
+  padding: 6px 14px; border: 1px solid var(--accent); border-radius: 999px;
   background: rgba(0, 210, 190, 0.15); transition: all 0.3s ease;
-  box-shadow: 0 0 12px rgba(0, 210, 190, 0.2);
+  box-shadow: 0 0 12px rgba(0, 210, 190, 0.2); white-space: nowrap;
 }
 .nav .live .star-badge { font-size: 14px; }
 .nav .live .n { color: var(--accent); font-size: 18px; font-weight: 900; }
-.nav .live .name { font-size: 14px; color: var(--ink); font-weight: 800; }
+.nav .live .name { font-size: 13px; color: var(--ink); font-weight: 800; }
+
+.driver-bar-selector {
+  background: var(--panel-2); border-y: 1px solid var(--line);
+  padding: 10px 24px; display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.selector-title { font-size: 12px; font-weight: 800; color: var(--accent); letter-spacing: 0.08em; }
+.driver-select-bar {
+  background: var(--void); color: #fff; border: 1px solid var(--line);
+  padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 13px; width: min(320px, 90vw);
+  cursor: pointer; outline: none;
+}
+.driver-select-bar:hover { border-color: var(--accent); }
 
 .broadcast-section {
   position: relative;
@@ -287,21 +312,21 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .car-backdrop-bg {
-  position: absolute; bottom: 8%; right: 0; width: 95%; max-height: 50%;
-  object-fit: contain; opacity: 0.75; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
-  z-index: 1; transition: all 0.5s ease;
+  position: absolute; bottom: 8%; right: 0; width: 95%; max-height: 52%;
+  object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
+  z-index: 1; transition: all 0.5s ease; border-radius: 12px;
 }
 
 .img-portrait {
-  position: relative; z-index: 3; height: 95%; max-width: 460px; object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.95));
+  position: relative; z-index: 3; height: 92%; max-width: 480px; object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.95)); border-radius: 12px;
 }
 
 .img-helmet {
-  position: absolute; top: 10%; left: 0; z-index: 4;
-  height: clamp(80px, 16vh, 150px); width: auto; object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); transform: rotate(-8deg);
-  transition: transform 0.3s ease;
+  position: absolute; top: 8%; left: 0; z-index: 4;
+  height: clamp(90px, 18vh, 170px); width: auto; object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.85)); transform: rotate(-8deg);
+  transition: transform 0.3s ease; border-radius: 8px;
 }
 .driver-card:hover .img-helmet { transform: rotate(0deg) scale(1.1); }
 
@@ -323,7 +348,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .real-car-backdrop {
-  width: 85%; height: 85%; object-fit: contain;
+  width: 88%; height: 88%; object-fit: contain;
   filter: drop-shadow(0 15px 35px rgba(0,0,0,0.85)); transition: transform .5s ease, opacity .3s ease;
 }
 
@@ -369,8 +394,8 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; align-items: center; justify-content: space-around;
   margin-top: 14px; background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; border: 1px solid var(--line);
 }
-.modal-helmet-img { height: 70px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
-.modal-car-img { height: 60px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+.modal-helmet-img { height: 75px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+.modal-car-img { height: 65px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
 
 .fav-btn-modal {
   background: rgba(244, 193, 15, 0.2); border: 1px solid var(--accent-2);
@@ -398,6 +423,8 @@ button { font-family: inherit; cursor: pointer; }
 .recent-race-item .pos-badge { font-family: 'Titillium Web', sans-serif; font-weight: 900; font-size: 14px; color: var(--accent-2); }
 
 @media (max-width: 960px) {
+  .nav { flex-wrap: wrap; }
+  .driver-select-nav { max-width: 140px; }
   .broadcast-grid { grid-template-columns: 1fr; }
   .visual-duo { opacity: 0.35; right: -40px; }
 }

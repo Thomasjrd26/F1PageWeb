@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>Paddock F1 2026 — Hub Live &amp; Dynamic API Fallback</title>
+  <title>Paddock F1 2026 — Hub Live & Photos Réelles HD</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Titillium+Web:ital,wght@0,600;0,700;0,900;1,700&display=swap" rel="stylesheet">
@@ -12,10 +12,19 @@
 </head>
 <body>
 
-  <!-- Navigation fixe -->
+  <!-- NAVIGATION FIXE -->
   <nav class="nav">
     <div class="brand">PAD<span>DOCK</span> // 2026</div>
-    <div class="live" id="navLive" title="Pilote favori / sélectionné">
+
+    <!-- MENU DÉROULANT PILOTE -->
+    <div class="driver-dropdown-wrapper">
+      <label for="driverSelectNav" class="driver-dropdown-label">🏎️ PILOTE :</label>
+      <select id="driverSelectNav" class="driver-select-nav" onchange="selectDriverFromDropdown(this.value)">
+      </select>
+    </div>
+
+    <!-- BADGE PILOTE FAVORI -->
+    <div class="live" id="navLive" title="Pilote favori sélectionné">
       <span class="star-badge" id="navStar">⭐</span>
       <span class="n" id="navNum">12</span>
       <span class="name" id="navName">Kimi Antonelli</span>
@@ -30,7 +39,6 @@
         <p class="live-status"><span class="pulse-dot"></span> PROCHAINE ÉPREUVE : GP D'ESPAGNE (MADRID) — 11-13 SEPTEMBRE 2026</p>
       </div>
 
-      <!-- Notifications GP -->
       <div class="notif-box">
         <label class="notif-label" for="notifToggle">
           <input type="checkbox" id="notifToggle" onchange="toggleNotifications(this)">
@@ -42,7 +50,6 @@
     </div>
 
     <div class="broadcast-grid">
-      <!-- Lecteur Video multi-sources -->
       <div class="video-container">
         <div class="video-player" id="videoPlayerBg">
           <div class="player-top-bar">
@@ -51,7 +58,6 @@
               <span class="badge-live">DIRECT F1</span>
             </div>
 
-            <!-- Menu Déroulant Source TV (Correction & Fix) -->
             <div class="source-selector-wrapper">
               <label for="playerSourceSelect" class="source-label">Source TV :</label>
               <select id="playerSourceSelect" class="source-select" onchange="changePlayerSource(this.value)">
@@ -72,7 +78,6 @@
         </div>
       </div>
 
-      <!-- Live Info Panel -->
       <div class="live-info-panel">
         <div class="panel-tabs">
           <button class="tab-btn active" onclick="switchTab('drivers')">Pilotes</button>
@@ -80,7 +85,6 @@
           <button class="tab-btn" onclick="switchTab('races')">Calendrier FIA (25 GP)</button>
         </div>
 
-        <!-- Classement Pilotes -->
         <div class="tab-content active" id="tabDrivers">
           <table class="live-table">
             <thead>
@@ -96,7 +100,6 @@
           </table>
         </div>
 
-        <!-- Classement Constructeurs -->
         <div class="tab-content" id="tabConstructors">
           <table class="live-table">
             <thead>
@@ -111,7 +114,6 @@
           </table>
         </div>
 
-        <!-- Calendrier 25 GP -->
         <div class="tab-content" id="tabRaces">
           <div class="races-scroll-container" id="racesScrollContainer">
             <div class="scroll-hint-up" onclick="scrollToCurrentRace()">🎯 PROCHAIN GP EN DIRECT : MADRID (11-13 SEPT)</div>
@@ -122,12 +124,19 @@
     </div>
 
     <a href="#sectionDrivers" class="scroll-indicator down">
-      <span>Défilez vers le bas pour explorer la grille et le carrousel des pilotes</span>
+      <span>Défilez vers le bas pour explorer la grille et les photos HD des pilotes</span>
       <span class="chevron-down"></span>
     </a>
   </section>
 
-  <!-- SECTION 2 : CAROUSEL HORIZONTAL DES PILOTES -->
+  <!-- BARRE DE COMMANDE SECONDAIRE -->
+  <div class="driver-bar-selector">
+    <span class="selector-title">🔍 ACCÈS RAPIDE PILOTE :</span>
+    <select id="driverSelectBar" class="driver-select-bar" onchange="selectDriverFromDropdown(this.value)">
+    </select>
+  </div>
+
+  <!-- SECTION 2 : CAROUSEL PILOTES -->
   <section class="grid-select" id="sectionDrivers"></section>
 
   <!-- SECTION 3 : ATELIER INTERACTIF MONOPLACE -->
@@ -150,7 +159,6 @@
     <div class="garage-stage">
       <img id="garageCarImg" class="real-car-backdrop" src="" alt="Monoplace F1 Officielle">
       
-      <!-- Hotspots -->
       <button class="hotspot-btn" style="left: 52%; top: 48%;" onclick="openHotspotModal('moteur')"><span>Groupe Propulseur</span></button>
       <button class="hotspot-btn" style="left: 14%; top: 70%;" onclick="openHotspotModal('aileronAvant')"><span>Aileron Avant</span></button>
       <button class="hotspot-btn" style="left: 84%; top: 38%;" onclick="openHotspotModal('aileronArriere')"><span>Aileron Arrière &amp; DRS</span></button>
