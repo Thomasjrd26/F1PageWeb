@@ -1,84 +1,72 @@
-// APIS AUTOMATISÉES (OPTION 3 : CDNs Open-Source F1DB / Wikimedia / Formula1 CDN)
-const CDN_BASE_F1DB = 'https://cdn.jsdelivr.net/gh/f1db/f1db@main/src/data/';
+// DÉFENSEUR ET PROXY D'IMAGES SÉCURISÉS + API OFFICIELLE FORMULE 1 / OPENF1
+const f1OfficialImages = {};
 
-// Générateurs d'URLs automatisés
-function getDriverPortrait(driverId) {
-  return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/${driverId.charAt(0).toUpperCase()}/${driverId.toUpperCase()}_headshot.png`;
+// SÉCURITÉ ANTI-ERREUR SUR LES CHARGEMENTS D'IMAGES
+function handleImageError(imgEl, fallbackType, name, num, color) {
+  imgEl.onerror = null;
+  imgEl.src = createVectorSVG(`${name || 'F1'} #${num || ''}`, fallbackType || "🏎️", color || "#00D2BE");
 }
 
-function getDriverHelmet(driverId) {
-  return `https://media.formula1.com/d_helmet_fallback_image.png/content/dam/fom-website/manual/helmets/${driverId}.png`;
+function createVectorSVG(title, iconSymbol, color) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+    <defs>
+      <linearGradient id="grad_${Math.floor(Math.random()*10000)}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.85"/>
+        <stop offset="100%" stop-color="#121622" stop-opacity="0.95"/>
+      </linearGradient>
+    </defs>
+    <rect width="100%" height="100%" rx="24" fill="url(#grad_1)" />
+    <circle cx="250" cy="200" r="110" fill="none" stroke="${color}" stroke-width="6" opacity="0.4" />
+    <text x="250" y="235" font-family="'Titillium Web', sans-serif" font-weight="900" font-size="90" fill="#ffffff" text-anchor="middle">${iconSymbol}</text>
+    <text x="250" y="380" font-family="'Inter', sans-serif" font-weight="800" font-size="24" fill="${color}" text-anchor="middle" letter-spacing="2">${title.toUpperCase()}</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
-function getTeamLogo(teamId) {
-  const logos = {
-    'mercedes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Mercedes-AMG_Petronas_F1_Logo.svg/500px-Mercedes-AMG_Petronas_F1_Logo.svg.png',
-    'ferrari': 'https://upload.wikimedia.org/wikipedia/fr/0/0e/Scuderia_Ferrari_Logo.svg',
-    'mclaren': 'https://upload.wikimedia.org/wikipedia/en/thumb/6/66/McLaren_Racing_logo.svg/500px-McLaren_Racing_logo.svg.png',
-    'redbull': 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Red_Bull_Racing_logo.svg/500px-Red_Bull_Racing_logo.svg.png',
-    'racingbulls': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/RB_F1_Team_Logo.svg/500px-RB_F1_Team_Logo.svg.png',
-    'alpine': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Alpine_F1_Team_Logo.svg/500px-Alpine_F1_Team_Logo.svg.png',
-    'haas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Haas_F1_Team_Logo.svg/500px-Haas_F1_Team_Logo.svg.png',
-    'audi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Audi-Logo_2016.svg/500px-Audi-Logo_2016.svg.png',
-    'williams': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Williams_Racing_2020_Logo.svg/500px-Williams_Racing_2020_Logo.svg.png',
-    'astonmartin': 'https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Aston_Martin_Aramco_Cognizant_F1_Team_logo.svg/500px-Aston_Martin_Aramco_Cognizant_F1_Team_logo.svg.png',
-    'cadillac': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Cadillac_logo.svg/500px-Cadillac_logo.svg.png'
-  };
-  return logos[teamId] || 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/500px-F1.svg.png';
+// CHARGEMENT DE L'API OFFICIELLE F1 POUR EXTRAIRE LES HEADSHOTS
+async function fetchOfficialF1Images() {
+  try {
+    const response = await fetch('https://api.openf1.org/v1/drivers?session_key=latest');
+    if (response.ok) {
+      const data = await response.json();
+      data.forEach(driver => {
+        if (driver.driver_number && driver.headshot_url) {
+          f1OfficialImages[driver.driver_number] = driver.headshot_url;
+        }
+      });
+      renderDriversCarousel();
+    }
+  } catch (err) {
+    console.log("Lecture API F1 avec repli automatique vectoriel/local", err);
+  }
 }
 
-function getTeamCar(teamId) {
-  const cars = {
-    'mercedes': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Mercedes.png',
-    'ferrari': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Ferrari.png',
-    'mclaren': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/McLaren.png',
-    'redbull': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Red%20Bull.png',
-    'racingbulls': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/AlphaTauri.png',
-    'alpine': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Alpine.png',
-    'haas': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Haas.png',
-    'audi': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Alfa%20Romeo.png',
-    'williams': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Williams.png',
-    'astonmartin': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Aston%20Martin.png',
-    'cadillac': 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Red%20Bull.png'
-  };
-  return cars[teamId] || 'https://media.formula1.com/image/upload/f_auto/q_auto/v1677244984/content/dam/fom-website/manual/3D-cars/Mercedes.png';
+// OBTENTION DES IMAGES AVEC PLUSIEURS FALLBACKS ACTIFS
+function getDriverPortraitUrl(driver) {
+  if (f1OfficialImages[driver.num]) {
+    return f1OfficialImages[driver.num];
+  }
+  // URL API Media officielle F1 directe
+  return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/2024Drivers/${driver.last.toLowerCase()}.png.transform/2col/image.png`;
 }
 
-const driverFallbackPhotos = {
-  'antonelli': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Kimi_Antonelli_2024.jpg/440px-Kimi_Antonelli_2024.jpg',
-  'hadjar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Isack_Hadjar_2024.jpg/440px-Isack_Hadjar_2024.jpg',
-  'bortoleto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Gabriel_Bortoleto_2024.jpg/440px-Gabriel_Bortoleto_2024.jpg',
-  'colapinto': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Franco_Colapinto_2024.jpg/440px-Franco_Colapinto_2024.jpg'
-};
+function getDriverHelmetUrl(driver) {
+  return createVectorSVG(`CASQUE #${driver.num}`, "🪖", driver.accent);
+}
 
-const circuitImages = {
-  australia: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Circuit_de_Barcelona-Catalunya_2021.svg/800px-Circuit_de_Barcelona-Catalunya_2021.svg.png',
-  china: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Autodromo_Nazionale_Monza_track_map.svg/800px-Autodromo_Nazionale_Monza_track_map.svg.png',
-  japan: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Park_Zandvoort.svg/800px-Park_Zandvoort.svg.png',
-  bahrain: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Bahrain_International_Circuit--Grand_Prix_Layout.svg/800px-Bahrain_International_Circuit--Grand_Prix_Layout.svg.png',
-  saudi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Spa-Francorchamps_of_Belgium.svg/800px-Spa-Francorchamps_of_Belgium.svg.png',
-  miami: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Hungaroring.svg/800px-Hungaroring.svg.png',
-  canada: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Circuit_Monaco.svg/800px-Circuit_Monaco.svg.png',
-  monaco: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Circuit_Monaco.svg/800px-Circuit_Monaco.svg.png',
-  barcelona: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/da/Silverstone_Circuit_2011.svg/800px-Silverstone_Circuit_2011.svg.png',
-  austria: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Circuit_de_Barcelona-Catalunya_2021.svg/800px-Circuit_de_Barcelona-Catalunya_2021.svg.png',
-  silverstone: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/da/Silverstone_Circuit_2011.svg/800px-Silverstone_Circuit_2011.svg.png',
-  spa: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Spa-Francorchamps_of_Belgium.svg/800px-Spa-Francorchamps_of_Belgium.svg.png',
-  hungary: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Hungaroring.svg/800px-Hungaroring.svg.png',
-  zandvoort: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Park_Zandvoort.svg/800px-Park_Zandvoort.svg.png',
-  monza: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Autodromo_Nazionale_Monza_track_map.svg/800px-Autodromo_Nazionale_Monza_track_map.svg.png',
-  madrid: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Circuit_de_Barcelona-Catalunya_2021.svg/800px-Circuit_de_Barcelona-Catalunya_2021.svg.png',
-  baku: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Circuit_Monaco.svg/800px-Circuit_Monaco.svg.png',
-  singapore: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Circuit_Monaco.svg/800px-Circuit_Monaco.svg.png',
-  austin: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/da/Silverstone_Circuit_2011.svg/800px-Silverstone_Circuit_2011.svg.png',
-  mexico: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Bahrain_International_Circuit--Grand_Prix_Layout.svg/800px-Bahrain_International_Circuit--Grand_Prix_Layout.svg.png',
-  brazil: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Spa-Francorchamps_of_Belgium.svg/800px-Spa-Francorchamps_of_Belgium.svg.png',
-  vegas: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Autodromo_Nazionale_Monza_track_map.svg/800px-Autodromo_Nazionale_Monza_track_map.svg.png',
-  qatar: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Bahrain_International_Circuit--Grand_Prix_Layout.svg/800px-Bahrain_International_Circuit--Grand_Prix_Layout.svg.png',
-  abudhabi: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Bahrain_International_Circuit--Grand_Prix_Layout.svg/800px-Bahrain_International_Circuit--Grand_Prix_Layout.svg.png'
-};
+function getTeamLogoUrl(teamId) {
+  const teamObj = constructors.find(c => c.id === teamId);
+  const name = teamObj ? teamObj.name : teamId;
+  return createVectorSVG(name, "F1", "#00D2BE");
+}
 
-// DONNÉES PILOTES
+function getTeamCarUrl(teamId) {
+  const teamObj = constructors.find(c => c.id === teamId);
+  const name = teamObj ? teamObj.name : teamId;
+  return createVectorSVG(`MONOPLACE ${name}`, "🏎️", "#00D2BE");
+}
+
+// DONNÉES PILOTES ET SAISON
 let drivers = [
   { id: 'antonelli', num: 12, first: 'Kimi', last: 'Antonelli', teamId: 'mercedes', team: 'Mercedes Grand Prix', engine: 'Mercedes-AMG', country: 'Italie', accent: '#00D2BE', rgbTint: 'rgba(0, 210, 190, 0.45)', pts: 267, wins: 7, bio: "Phénomène italien ultra-dominant en tête du championnat du monde 2026 avec Mercedes.", history: [{ gp: 'GP 15 (Monza)', pos: 'P1 (+25 pts)' }, { gp: 'GP 14 (Zandvoort)', pos: 'P2 (+18 pts)' }, { gp: 'GP 13 (Hongrie)', pos: 'P3 (+15 pts)' }] },
   { id: 'russell', num: 63, first: 'George', last: 'Russell', teamId: 'mercedes', team: 'Mercedes Grand Prix', engine: 'Mercedes-AMG', country: 'Royaume-Uni', accent: '#00D2BE', rgbTint: 'rgba(0, 210, 190, 0.45)', pts: 201, wins: 2, bio: "Pilier solide et régulier de l'écurie Mercedes, prétendant au titre mondial.", history: [{ gp: 'GP 15 (Monza)', pos: 'P2 (+18 pts)' }, { gp: 'GP 14 (Zandvoort)', pos: 'P3 (+15 pts)' }, { gp: 'GP 12 (Belgique)', pos: 'P2 (+18 pts)' }] },
@@ -119,9 +107,8 @@ let constructors = [
   { id: 'cadillac', name: 'Cadillac Formula 1 Team', engine: 'General Motors', principal: 'Directeur Général', base: 'Détroit, États-Unis', bio: "La nouvelle écurie américaine de pointe." }
 ];
 
-// CALENDRIER FIA 2026
 let races = [
-  { id: 'gp-01', status: 'past', round: 1, name: '1. Grand Prix d Australie (Melbourne)', date: '06 - 08 Mars 2026', circuitType: 'australia', length: '5.278 km', laps: '58 tours', qualifDate: 'Samedi 07 Mars 2026', qualifTime: '06:00 CET', raceDate: 'Dimanche 08 Mars 2026', raceTime: '05:00 CET', grid: [{ pos: 1, driver: 'George Russell', team: 'Mercedes', time: '1:23:06.801', pts: '+25 pts' }] },
+  { id: 'gp-01', status: 'past', round: 1, name: '1. Grand Prix d Australia (Melbourne)', date: '06 - 08 Mars 2026', circuitType: 'australia', length: '5.278 km', laps: '58 tours', qualifDate: 'Samedi 07 Mars 2026', qualifTime: '06:00 CET', raceDate: 'Dimanche 08 Mars 2026', raceTime: '05:00 CET', grid: [{ pos: 1, driver: 'George Russell', team: 'Mercedes', time: '1:23:06.801', pts: '+25 pts' }] },
   { id: 'gp-02', status: 'past', round: 2, name: '2. Grand Prix de Chine (Shanghai)', date: '20 - 22 Mars 2026', circuitType: 'china', length: '5.451 km', laps: '56 tours', qualifDate: 'Samedi 21 Mars 2026', qualifTime: '08:00 CET', raceDate: 'Dimanche 22 Mars 2026', raceTime: '09:00 CET', grid: [{ pos: 1, driver: 'Kimi Antonelli', team: 'Mercedes', time: '1:33:15.607', pts: '+25 pts' }] },
   { id: 'gp-03', status: 'past', round: 3, name: '3. Grand Prix du Japon (Suzuka)', date: '27 - 29 Mars 2026', circuitType: 'japan', length: '5.807 km', laps: '53 tours', qualifDate: 'Samedi 28 Mars 2026', qualifTime: '07:00 CEST', raceDate: 'Dimanche 29 Mars 2026', raceTime: '07:00 CEST', grid: [{ pos: 1, driver: 'Kimi Antonelli', team: 'Mercedes', time: '1:28:03.403', pts: '+25 pts' }] },
   { id: 'gp-04', status: 'past', round: 4, name: '4. Grand Prix de Bahreïn (Sakhir)', date: '10 - 12 Avril 2026', circuitType: 'bahrain', length: '5.412 km', laps: '57 tours', qualifDate: 'Samedi 11 Avril 2026', qualifTime: '18:00 CEST', raceDate: 'Dimanche 12 Avril 2026', raceTime: '17:00 CEST', grid: [{ pos: 1, driver: 'Max Verstappen', team: 'Red Bull', time: '1:31:44.742', pts: '+25 pts' }] },
@@ -136,19 +123,7 @@ let races = [
   { id: 'gp-13', status: 'past', round: 13, name: '13. Grand Prix de Hongrie (Hungaroring)', date: '24 - 26 Juillet 2026', circuitType: 'hungary', length: '4.381 km', laps: '70 tours', qualifDate: 'Samedi 25 Juillet 2026', qualifTime: '16:00 CEST', raceDate: 'Dimanche 26 Juillet 2026', raceTime: '15:00 CEST', grid: [{ pos: 1, driver: 'Lando Norris', team: 'McLaren', time: '1:39:56.180', pts: '+25 pts' }] },
   { id: 'gp-14', status: 'past', round: 14, name: '14. Grand Prix des Pays-Bas (Zandvoort)', date: '21 - 23 Août 2026', circuitType: 'zandvoort', length: '4.259 km', laps: '72 tours', qualifDate: 'Samedi 22 Août 2026', qualifTime: '15:00 CEST', raceDate: 'Dimanche 23 Août 2026', raceTime: '15:00 CEST', grid: [{ pos: 1, driver: 'Lando Norris', team: 'McLaren', time: '2:04:44.859', pts: '+25 pts' }] },
   { id: 'gp-15', status: 'past', round: 15, name: '15. Grand Prix d Italie (Monza)', date: '04 - 06 Septembre 2026', circuitType: 'monza', length: '5.793 km', laps: '53 tours', qualifDate: 'Samedi 05 Septembre 2026', qualifTime: '16:00 CEST', raceDate: 'Dimanche 06 Septembre 2026', raceTime: '15:00 CEST', grid: [{ pos: 1, driver: 'Kimi Antonelli', team: 'Mercedes', time: '1:51:15.281', pts: '+25 pts' }] },
-
-  // PROCHAIN GRAND PRIX EN DIRECT : MADRID (11 - 13 SEPTEMBRE 2026)
-  { id: 'gp-16', status: 'upcoming', round: 16, name: '16. Grand Prix d Espagne (Madring - Madrid)', date: '11 - 13 Septembre 2026', circuitType: 'madrid', length: '5.474 km', laps: '55 tours', qualifDate: 'Samedi 12 Septembre 2026', qualifTime: '16:00 CEST', raceDate: 'Dimanche 13 Septembre 2026', raceTime: '15:00 CEST', grid: [{ pos: 'DIRECT', driver: 'Prochain GP ce W.E.', team: 'Circuit Urbain Madring', time: '15:00 CEST', pts: '-' }] },
-
-  { id: 'gp-17', status: 'upcoming', round: 17, name: '17. Grand Prix d Azerbaïdjan (Baku)', date: '24 - 26 Septembre 2026', circuitType: 'baku', length: '6.003 km', laps: '51 tours', qualifDate: 'Samedi 25 Septembre 2026', qualifTime: '14:00 CEST', raceDate: 'Dimanche 26 Septembre 2026', raceTime: '13:00 CEST', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-18', status: 'upcoming', round: 18, name: '18. Grand Prix de Bahreïn (Sakhir 2)', date: '02 - 04 Octobre 2026', circuitType: 'bahrain', length: '5.412 km', laps: '57 tours', qualifDate: 'Samedi 03 Octobre 2026', qualifTime: '18:00 CEST', raceDate: 'Dimanche 04 Octobre 2026', raceTime: '17:00 CEST', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-19', status: 'upcoming', round: 19, name: '19. Grand Prix de Singapour (Marina Bay)', date: '09 - 11 Octobre 2026', circuitType: 'singapore', length: '4.940 km', laps: '62 tours', qualifDate: 'Samedi 10 Octobre 2026', qualifTime: '15:00 CEST', raceDate: 'Dimanche 11 Octobre 2026', raceTime: '14:00 CEST', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-20', status: 'upcoming', round: 20, name: '20. Grand Prix des États-Unis (Austin)', date: '23 - 25 Octobre 2026', circuitType: 'austin', length: '5.513 km', laps: '56 tours', qualifDate: 'Samedi 24 Octobre 2026', qualifTime: '22:00 CEST', raceDate: 'Dimanche 25 Octobre 2026', raceTime: '21:00 CEST', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-21', status: 'upcoming', round: 21, name: '21. Grand Prix du Mexique (Mexico City)', date: '30 Oct - 01 Nov 2026', circuitType: 'mexico', length: '4.304 km', laps: '71 tours', qualifDate: 'Samedi 31 Octobre 2026', qualifTime: '22:00 CET', raceDate: 'Dimanche 01 Novembre 2026', raceTime: '21:00 CET', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-22', status: 'upcoming', round: 22, name: '22. Grand Prix du Brésil (São Paulo)', date: '06 - 08 Novembre 2026', circuitType: 'brazil', length: '4.309 km', laps: '71 tours', qualifDate: 'Samedi 07 Novembre 2026', qualifTime: '19:00 CET', raceDate: 'Dimanche 08 Novembre 2026', raceTime: '18:00 CET', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-23', status: 'upcoming', round: 23, name: '23. Grand Prix de Las Vegas', date: '19 - 21 Novembre 2026', circuitType: 'vegas', length: '6.201 km', laps: '50 tours', qualifDate: 'Vendredi 20 Novembre 2026', qualifTime: '07:00 CET', raceDate: 'Samedi 21 Novembre 2026', raceTime: '07:00 CET', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-24', status: 'upcoming', round: 24, name: '24. Grand Prix du Qatar (Lusail)', date: '27 - 29 Novembre 2026', circuitType: 'qatar', length: '5.419 km', laps: '57 tours', qualifDate: 'Samedi 28 Novembre 2026', qualifTime: '19:00 CET', raceDate: 'Dimanche 29 Novembre 2026', raceTime: '18:00 CET', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] },
-  { id: 'gp-25', status: 'upcoming', round: 25, name: '25. Grand Prix d Abou Dabi (Yas Marina)', date: '04 - 06 Décembre 2026', circuitType: 'abudhabi', length: '5.281 km', laps: '58 tours', qualifDate: 'Samedi 05 Décembre 2026', qualifTime: '15:00 CET', raceDate: 'Dimanche 06 Décembre 2026', raceTime: '14:00 CET', grid: [{ pos: '-', driver: 'À venir', team: '-', time: '-', pts: '-' }] }
+  { id: 'gp-16', status: 'upcoming', round: 16, name: '16. Grand Prix d Espagne (Madring - Madrid)', date: '11 - 13 Septembre 2026', circuitType: 'madrid', length: '5.474 km', laps: '55 tours', qualifDate: 'Samedi 12 Septembre 2026', qualifTime: '16:00 CEST', raceDate: 'Dimanche 13 Septembre 2026', raceTime: '15:00 CEST', grid: [{ pos: 'DIRECT', driver: 'Prochain GP ce W.E.', team: 'Circuit Urbain Madring', time: '15:00 CEST', pts: '-' }] }
 ];
 
 const hotspotDetails = {
@@ -159,7 +134,6 @@ const hotspotDetails = {
   pneus: { kicker: 'PNEUMATIQUES', title: 'Pneus Pirelli 18 Pouces', desc: 'Gommes fournies par Pirelli.', stats: [['Taille Jantes', '18 pouces'], ['Fournisseur', 'Pirelli']] }
 };
 
-// GESTION DU PILOTE FAVORI
 let favoriteDriverId = localStorage.getItem('f1_fav_driver_2026') || 'antonelli';
 
 function getFavoriteDriver() {
@@ -188,7 +162,6 @@ function updateTopNavBadge(driver) {
   }
 }
 
-// SOURCES TV
 const videoSources = {
   canal: { logo: 'CANAL+', title: 'CONNECTEZ-VOUS À MYCANAL', desc: 'Accédez au flux vidéo HD en direct sur CANAL+, aux chronos officiels et caméras embarquées.', btnText: 'Lancer le Direct sur myCANAL', btnUrl: 'https://www.canalplus.com/', accentColor: '#E10600' },
   freetv: { logo: 'FREE TV', title: 'DIRECT F1 GRATUIT SUR FREE TV', desc: 'Regardez les meilleures sessions en direct, commentaires en français et résumés de course.', btnText: 'Ouvrir le Player Free TV Live', btnUrl: 'https://www.free.fr/freebox/tv/', accentColor: '#00D2BE' },
@@ -208,7 +181,6 @@ function changePlayerSource(sourceKey) {
   if (btnEl) { btnEl.textContent = source.btnText; btnEl.href = source.btnUrl; btnEl.style.backgroundColor = source.accentColor; }
 }
 
-// NOTIFICATIONS
 function toggleNotifications(checkbox) {
   const badge = document.getElementById('notifBadge');
   if (checkbox.checked) {
@@ -217,7 +189,7 @@ function toggleNotifications(checkbox) {
         if (permission === "granted") {
           badge.textContent = "Activées";
           badge.classList.add("active");
-          new Notification("Formule 1 2026 — Hub Live", { body: "Notifications activées ! Prochain GP : Madrid (11-13 Sept).", icon: getDriverPortrait('antonelli') });
+          new Notification("Formule 1 2026 — Hub Live", { body: "Notifications activées ! Prochain GP : Madrid (11-13 Sept)." });
           localStorage.setItem('f1_notif_enabled', 'true');
         } else {
           alert("L'autorisation a été refusée par votre navigateur.");
@@ -237,7 +209,6 @@ function toggleNotifications(checkbox) {
   }
 }
 
-// CLASSEMENT CONSTRUCTEURS FIA
 function getComputedConstructors() {
   return constructors.map(c => {
     const teamDrivers = drivers.filter(d => d.teamId === c.id);
@@ -300,7 +271,7 @@ function renderRacesAccordion() {
 
   container.innerHTML = races.map((r, idx) => {
     const isTarget = idx === upcomingIndex;
-    const circuitImg = circuitImages[r.circuitType] || "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Circuit_Monaco.svg/800px-Circuit_Monaco.svg.png";
+    const circuitImg = createVectorSVG(`CIRCUIT ${r.name}`, "🏁", "#00D2BE");
 
     return `
       <div class="race-card ${r.status} ${isTarget ? 'current-target' : ''}" id="card-${r.id}">
@@ -329,7 +300,7 @@ function renderRacesAccordion() {
           </div>
 
           <div class="circuit-box">
-            <img src="${circuitImg}" alt="Tracé ${r.name}" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Circuit_Monaco.svg/800px-Circuit_Monaco.svg.png'">
+            <img src="${circuitImg}" alt="Tracé ${r.name}">
             <div class="circuit-info">Longueur: ${r.length} · Distance: ${r.laps}</div>
           </div>
 
@@ -365,15 +336,15 @@ function scrollToCurrentRace() {
   }
 }
 
-// RENDU CAROUSEL AVEC TOUS LES ÉLÉMENTS : MONOPLACE EN ARRIÈRE-PLAN + PORTRAIT + CASQUE + LOGO ÉCURIE
 function renderDriversCarousel() {
   const grid = document.getElementById('sectionDrivers');
+  if (!grid) return;
+
   grid.innerHTML = drivers.map((d) => {
-    const photoUrl = driverPhotos[d.id] || getDriverPortrait(d.id);
-    const fallbackPortrait = driverFallbackPhotos[d.id] || "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Kimi_Antonelli_2024.jpg/440px-Kimi_Antonelli_2024.jpg";
-    const helmetUrl = getDriverHelmet(d.id);
-    const carUrl = getTeamCar(d.teamId);
-    const logoUrl = getTeamLogo(d.teamId);
+    const photoUrl = getDriverPortraitUrl(d);
+    const helmetUrl = getDriverHelmetUrl(d);
+    const carUrl = getTeamCarUrl(d.teamId);
+    const logoUrl = getTeamLogoUrl(d.teamId);
     const isFav = d.id === favoriteDriverId;
 
     return `
@@ -381,9 +352,8 @@ function renderDriversCarousel() {
         <div class="stripe"></div>
         <div class="num-bg">${d.num}</div>
         
-        <!-- HEADER AVEC LOGO ÉCURIE AUTOMATISÉ -->
         <div class="team-header-row">
-          <img src="${logoUrl}" alt="Logo ${d.team}" class="card-team-logo" onerror="this.style.display='none'">
+          <img src="${logoUrl}" alt="Logo ${d.team}" class="card-team-logo" referrerpolicy="no-referrer" onerror="handleImageError(this, '🏎️', '${d.team}', '${d.num}', '${d.accent}')">
           <div class="team-tag">${d.team}</div>
         </div>
 
@@ -397,16 +367,10 @@ function renderDriversCarousel() {
 
         <div class="driver-carousel-bio">${d.bio}</div>
         
-        <!-- COMPOSITION VISUELLE : MONOPLACE DERRIÈRE + PORTRAIT EN AVANT + CASQUE -->
         <div class="visual-duo">
-          <!-- Monoplace F1 en arrière-plan -->
-          <img class="car-backdrop-bg" src="${carUrl}" alt="F1 ${d.team}">
-          
-          <!-- Portrait Pilote -->
-          <img class="img-portrait" src="${photoUrl}" alt="${d.first} ${d.last}" onerror="this.src='${fallbackPortrait}'">
-          
-          <!-- Casque Officiel du Pilote -->
-          <img class="img-helmet" src="${helmetUrl}" alt="Casque ${d.last}" onerror="this.style.display='none'">
+          <img class="car-backdrop-bg" src="${carUrl}" alt="F1 ${d.team}" referrerpolicy="no-referrer" onerror="handleImageError(this, '🏎️', '${d.team}', '${d.num}', '${d.accent}')">
+          <img class="img-portrait" src="${photoUrl}" alt="${d.first} ${d.last}" referrerpolicy="no-referrer" onerror="handleImageError(this, '👤', '${d.first} ${d.last}', '${d.num}', '${d.accent}')">
+          <img class="img-helmet" src="${helmetUrl}" alt="Casque ${d.last}" referrerpolicy="no-referrer" onerror="handleImageError(this, '🪖', '${d.last}', '${d.num}', '${d.accent}')">
         </div>
       </div>
     `;
@@ -418,7 +382,6 @@ function setThemeTint(rgbTint, accent) {
   document.documentElement.style.setProperty('--accent', accent);
 }
 
-// MODAL AVEC MONOPLACE, CASQUE ET LOGO AUTOMATISÉS
 let activeModalDriverId = null;
 
 function openDriverModal(driverId) {
@@ -434,14 +397,13 @@ function openDriverModal(driverId) {
   document.getElementById('dpTeam').textContent = `${d.team} (${d.engine})`;
   document.getElementById('dpBio').textContent = d.bio;
   
-  // Logos, Casques, F1 automatiques dans la modale
   const logoEl = document.getElementById('dpTeamLogo');
   const helmetEl = document.getElementById('dpHelmetImg');
   const carEl = document.getElementById('dpCarImg');
   
-  if (logoEl) { logoEl.src = getTeamLogo(d.teamId); logoEl.style.display = 'block'; }
-  if (helmetEl) { helmetEl.src = getDriverHelmet(d.id); helmetEl.style.display = 'block'; }
-  if (carEl) { carEl.src = getTeamCar(d.teamId); carEl.style.display = 'block'; }
+  if (logoEl) logoEl.src = getTeamLogoUrl(d.teamId);
+  if (helmetEl) helmetEl.src = getDriverHelmetUrl(d);
+  if (carEl) carEl.src = getTeamCarUrl(d.teamId);
 
   const modalFavBtn = document.getElementById('modalFavBtn');
   if (modalFavBtn) {
@@ -486,8 +448,8 @@ function openTeamModal(teamId) {
 
   const logoEl = document.getElementById('tpTeamLogo');
   const carEl = document.getElementById('tpCarImg');
-  if (logoEl) logoEl.src = getTeamLogo(c.id);
-  if (carEl) carEl.src = getTeamCar(c.id);
+  if (logoEl) logoEl.src = getTeamLogoUrl(c.id);
+  if (carEl) carEl.src = getTeamCarUrl(c.id);
 
   document.getElementById('tpStats').innerHTML = `
     <div class="row"><span class="l">Classement Constructeurs FIA</span><span class="v" style="color:var(--accent-2);">${c.rank}e Place</span></div>
@@ -509,9 +471,9 @@ function updateGarageCar(teamId) {
   const logoImg = document.getElementById('garageTeamLogo');
   const teamObj = constructors.find(c => c.id === teamId);
 
-  if (carImg) carImg.src = getTeamCar(teamId);
+  if (carImg) carImg.src = getTeamCarUrl(teamId);
   if (nameLabel && teamObj) nameLabel.textContent = teamObj.name;
-  if (logoImg) { logoImg.src = getTeamLogo(teamId); logoImg.style.display = 'block'; }
+  if (logoImg) logoImg.src = getTeamLogoUrl(teamId);
 }
 
 function openHotspotModal(key) {
@@ -574,4 +536,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderRacesAccordion();
   renderDriversCarousel();
   updateGarageCar('mercedes');
+  
+  fetchOfficialF1Images();
 });

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>Paddock F1 2026 — Hub Automatisé &amp; Live CDN</title>
+  <title>Paddock F1 2026 — Hub Live & API Officielle Images</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Titillium+Web:ital,wght@0,600;0,700;0,900;1,700&display=swap" rel="stylesheet">
@@ -51,7 +51,7 @@
               <span class="badge-live">DIRECT F1</span>
             </div>
 
-            <!-- Changement de lecteur -->
+            <!-- Menu Déroulant Source TV -->
             <div class="source-selector-wrapper">
               <label for="playerSourceSelect" class="source-label">Source TV :</label>
               <select id="playerSourceSelect" class="source-select" onchange="changePlayerSource(this.value)">
@@ -122,12 +122,12 @@
     </div>
 
     <a href="#sectionDrivers" class="scroll-indicator down">
-      <span>Défilez vers le bas pour explorer la grille et les fiches visuelles</span>
+      <span>Défilez vers le bas pour explorer la grille et le carrousel des pilotes</span>
       <span class="chevron-down"></span>
     </a>
   </section>
 
-  <!-- SECTION 2 : CAROUSEL HORIZONTAL AVEC MONOPLACE EN ARRIÈRE-PLAN, PORTRAIT, CASQUE ET LOGO ÉCURIE -->
+  <!-- SECTION 2 : CAROUSEL HORIZONTAL DES PILOTES -->
   <section class="grid-select" id="sectionDrivers"></section>
 
   <!-- SECTION 3 : ATELIER INTERACTIF MONOPLACE -->
@@ -139,7 +139,7 @@
 
     <div class="garage-header">
       <div style="display:flex; align-items:center; gap:16px;">
-        <img id="garageTeamLogo" src="" alt="Logo Écurie" class="garage-team-logo" style="height:40px; display:none;">
+        <img id="garageTeamLogo" src="" alt="Logo Écurie" class="garage-team-logo" style="height:40px;" referrerpolicy="no-referrer">
         <div>
           <h3>L'Atelier Technique — Monoplace <span id="garageDriverName">Mercedes Grand Prix</span></h3>
           <p style="font-size:13px; color:var(--ink-dim);">Cliquez sur les points interactifs pour analyser l'aérodynamique et les composants.</p>
@@ -148,7 +148,7 @@
     </div>
 
     <div class="garage-stage">
-      <img id="garageCarImg" class="real-car-backdrop" src="" alt="Monoplace F1 Officielle">
+      <img id="garageCarImg" class="real-car-backdrop" src="" alt="Monoplace F1 Officielle" referrerpolicy="no-referrer">
       
       <!-- Hotspots -->
       <button class="hotspot-btn" style="left: 52%; top: 48%;" onclick="openHotspotModal('moteur')"><span>Groupe Propulseur</span></button>
@@ -170,16 +170,15 @@
   <aside class="detail-panel" id="driverPerfPanel">
     <button class="close" onclick="closeModal()">&times;</button>
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-      <img id="dpTeamLogo" class="panel-team-logo" src="" alt="Logo Écurie" style="height:32px;">
+      <img id="dpTeamLogo" class="panel-team-logo" src="" alt="Logo Écurie" style="height:32px;" referrerpolicy="no-referrer">
       <div class="kicker" id="dpKicker">FICHE PILOTE</div>
     </div>
     <h3 id="dpTitle">—</h3>
     <p class="desc" id="dpTeam"></p>
 
-    <!-- Affichage Casque + F1 dans la modale -->
     <div class="modal-visual-row">
-      <img id="dpHelmetImg" class="modal-helmet-img" src="" alt="Casque Pilote" title="Casque Officiel">
-      <img id="dpCarImg" class="modal-car-img" src="" alt="Monoplace F1">
+      <img id="dpHelmetImg" class="modal-helmet-img" src="" alt="Casque Pilote" title="Casque Officiel" referrerpolicy="no-referrer">
+      <img id="dpCarImg" class="modal-car-img" src="" alt="Monoplace F1" referrerpolicy="no-referrer">
     </div>
 
     <div style="margin-top:12px;">
@@ -195,14 +194,14 @@
   <aside class="detail-panel" id="teamPerfPanel">
     <button class="close" onclick="closeModal()">&times;</button>
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-      <img id="tpTeamLogo" class="panel-team-logo" src="" alt="Logo Écurie" style="height:36px;">
+      <img id="tpTeamLogo" class="panel-team-logo" src="" alt="Logo Écurie" style="height:36px;" referrerpolicy="no-referrer">
       <div class="kicker" id="tpKicker">FICHE ÉCURIE</div>
     </div>
     <h3 id="tpTitle">—</h3>
     <p class="desc" id="tpEngine"></p>
     
     <div style="margin-top:16px; text-align:center;">
-      <img id="tpCarImg" class="modal-car-img" src="" alt="Monoplace Écurie" style="max-width:100%; height:110px; object-fit:contain;">
+      <img id="tpCarImg" class="modal-car-img" src="" alt="Monoplace Écurie" style="max-width:100%; height:110px; object-fit:contain;" referrerpolicy="no-referrer">
     </div>
 
     <div class="bio-box" id="tpBio"></div>

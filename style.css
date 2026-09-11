@@ -32,7 +32,6 @@ body {
 h1, h2, h3, h4, .display { font-family: 'Titillium Web', sans-serif; }
 button { font-family: inherit; cursor: pointer; }
 
-/* NAV FIXE & BADGE EN HAUT À DROITE */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between;
@@ -53,7 +52,6 @@ button { font-family: inherit; cursor: pointer; }
 .nav .live .n { color: var(--accent); font-size: 18px; font-weight: 900; }
 .nav .live .name { font-size: 14px; color: var(--ink); font-weight: 800; }
 
-/* SECTION BROADCAST & NOTIFICATIONS */
 .broadcast-section {
   position: relative;
   padding: 90px clamp(20px, 5vw, 60px) 40px;
@@ -75,7 +73,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 @keyframes livePulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-/* BOX NOTIFICATIONS GP */
 .notif-box {
   display: flex; align-items: center; gap: 12px; background: var(--panel-2);
   padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line);
@@ -97,7 +94,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 .notif-status-badge.active { background: rgba(0, 230, 118, 0.2); color: #00E676; border: 1px solid #00E676; }
 
-/* LECTEUR VIDEO ET SÉLECTEUR DE SOURCE */
 .broadcast-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; }
 
 .video-container {
@@ -137,7 +133,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 .btn-canal:hover { transform: translateY(-2px); }
 
-/* LIVE INFO PANEL */
 .live-info-panel {
   background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px;
   display: flex; flex-direction: column; height: 490px;
@@ -154,7 +149,6 @@ button { font-family: inherit; cursor: pointer; }
 .tab-content { display: none; flex: 1; overflow-y: auto; }
 .tab-content.active { display: block; }
 
-/* TABLES ET BOUTONS FAVORIS */
 .live-table { width: 100%; border-collapse: collapse; text-align: left; }
 .live-table th { font-size: 11px; color: var(--ink-dim); padding-bottom: 10px; border-bottom: 1px solid var(--line); text-transform: uppercase; }
 .live-table td { padding: 10px 0; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: middle; }
@@ -172,7 +166,6 @@ button { font-family: inherit; cursor: pointer; }
 
 .medal { font-size: 15px; margin-right: 4px; }
 
-/* CALENDRIER ACCORDION DÉTAILLÉ */
 .races-scroll-container {
   display: flex; flex-direction: column; gap: 10px;
   max-height: 390px; overflow-y: auto; padding-right: 6px;
@@ -244,10 +237,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 @keyframes bounceUp { 0%, 100% { transform: translateY(0) rotate(45deg); } 50% { transform: translateY(-7px) rotate(45deg); } }
 
-/* CAROUSEL ENRICHI : MONOPLACE EN ARRIÈRE-PLAN + PORTRAIT + CASQUE + LOGO ÉCURIE */
 .grid-select {
   height: 100vh; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-  position: relative;
+  position: relative; background: #0c0f17;
 }
 .grid-select::-webkit-scrollbar { display: none; }
 
@@ -265,7 +257,7 @@ button { font-family: inherit; cursor: pointer; }
 .driver-card .stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: linear-gradient(180deg, var(--card-accent), transparent); }
 
 .team-header-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; z-index: 3; }
-.card-team-logo { height: 32px; max-width: 120px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
+.card-team-logo { height: 36px; max-width: 140px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
 .driver-card .team-tag { font-size: 13px; font-weight: 800; letter-spacing: .14em; color: var(--card-accent); text-transform: uppercase; }
 
 .driver-card .eyebrow { font-size: 13px; color: var(--ink-dim); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; z-index: 3; }
@@ -283,38 +275,36 @@ button { font-family: inherit; cursor: pointer; }
 
 .driver-carousel-bio {
   margin-top: 14px; max-width: 480px; font-size: 13px; line-height: 1.6;
-  color: #e2e8f0; background: rgba(18,22,34,0.75); padding: 14px 18px;
+  color: #e2e8f0; background: rgba(18,22,34,0.82); padding: 14px 18px;
   border-radius: 8px; border-left: 4px solid var(--card-accent); z-index: 3;
   backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
-/* COMPOSITION VISUELLE SUPRÊME : MONOPLACE EN ARRIÈRE-PLAN + PORTRAIT + CASQUE */
 .visual-duo {
   position: absolute; right: clamp(10px, 4vw, 80px); bottom: 0;
-  height: clamp(360px, 72vh, 760px); width: clamp(450px, 55vw, 900px);
+  height: clamp(360px, 72vh, 760px); width: clamp(420px, 55vw, 880px);
   z-index: 2; pointer-events: none; display: flex; align-items: flex-end; justify-content: flex-end;
 }
 
 .car-backdrop-bg {
-  position: absolute; bottom: 5%; right: 0; width: 100%; max-height: 55%;
-  object-fit: contain; opacity: 0.55; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
-  transform: translateY(10%) scale(1.1); z-index: 1; transition: all 0.5s ease;
+  position: absolute; bottom: 8%; right: 0; width: 95%; max-height: 50%;
+  object-fit: contain; opacity: 0.65; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
+  z-index: 1; transition: all 0.5s ease;
 }
 
 .img-portrait {
-  position: relative; z-index: 3; height: 95%; max-width: 480px; object-fit: contain;
+  position: relative; z-index: 3; height: 95%; max-width: 460px; object-fit: contain;
   filter: drop-shadow(0 20px 40px rgba(0,0,0,0.95));
 }
 
 .img-helmet {
-  position: absolute; top: 12%; left: 0; z-index: 4;
+  position: absolute; top: 10%; left: 0; z-index: 4;
   height: clamp(80px, 16vh, 150px); width: auto; object-fit: contain;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); transform: rotate(-8deg);
   transition: transform 0.3s ease;
 }
 .driver-card:hover .img-helmet { transform: rotate(0deg) scale(1.1); }
 
-/* ATELIER INTERACTIF */
 .garage-section {
   position: relative; padding: 100px clamp(20px, 6vw, 80px) 60px; min-height: 100vh;
   display: flex; flex-direction: column; justify-content: space-between; border-top: 1px solid var(--line);
@@ -341,7 +331,7 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute; width: 30px; height: 30px; border-radius: 50%; border: none;
   background: #ffffff; display: flex; align-items: center; justify-content: center;
   transform: translate(-50%, -50%); cursor: pointer; z-index: 10;
-  animation: pulseGlow 2.5s infinite; box-shadow: 0 0 12px rgba(255,255,255,0.9);
+  animation: pulseGlow 2.5s infinite; box-shadow: 0 0 12px rgba(0, 210, 190, 0.9);
 }
 .hotspot-btn::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
 @keyframes pulseGlow {
@@ -357,7 +347,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 .hotspot-btn:hover span { opacity: 1; }
 
-/* MODALS DÉTAILLÉES AVEC VISUELS ENRICHIS */
 .backdrop {
   position: fixed; inset: 0; background: rgba(5, 7, 12, 0.82); backdrop-filter: blur(8px);
   opacity: 0; pointer-events: none; transition: opacity .3s ease; z-index: 60;
