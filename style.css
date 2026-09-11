@@ -288,7 +288,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .car-backdrop-bg {
   position: absolute; bottom: 8%; right: 0; width: 95%; max-height: 50%;
-  object-fit: contain; opacity: 0.65; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
+  object-fit: contain; opacity: 0.75; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
   z-index: 1; transition: all 0.5s ease;
 }
 

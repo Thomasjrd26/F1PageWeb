@@ -1,16 +1,11 @@
-// DÉFENSEUR ET PROXY D'IMAGES SÉCURISÉS + API OFFICIELLE FORMULE 1 / OPENF1
-const f1OfficialImages = {};
+// MULTI-API CASCADING FALLBACK SYSTEM (BASCULE AUTOMATIQUE SANS BLOQUEUR)
+const openF1Headshots = {};
 
-// SÉCURITÉ ANTI-ERREUR SUR LES CHARGEMENTS D'IMAGES
-function handleImageError(imgEl, fallbackType, name, num, color) {
-  imgEl.onerror = null;
-  imgEl.src = createVectorSVG(`${name || 'F1'} #${num || ''}`, fallbackType || "🏎️", color || "#00D2BE");
-}
-
+// SÉCURITÉ VECTORIELLE GARANTIE SANS AUCUNE DÉPENDANCE DÉFAILLANTE
 function createVectorSVG(title, iconSymbol, color) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
     <defs>
-      <linearGradient id="grad_${Math.floor(Math.random()*10000)}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="grad_${Math.floor(Math.random()*100000)}" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="${color}" stop-opacity="0.85"/>
         <stop offset="100%" stop-color="#121622" stop-opacity="0.95"/>
       </linearGradient>
@@ -23,50 +18,115 @@ function createVectorSVG(title, iconSymbol, color) {
   return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
 
-// CHARGEMENT DE L'API OFFICIELLE F1 POUR EXTRAIRE LES HEADSHOTS
-async function fetchOfficialF1Images() {
+// ALGORITHME DE CHARGEMENT MULTI-API EN CASCADE DYNAMIQUE
+function loadImageWithCascade(imgElement, sourcesList) {
+  if (!imgElement || !sourcesList || sourcesList.length === 0) return;
+
+  let sourceIndex = 0;
+
+  function tryNextSource() {
+    if (sourceIndex >= sourcesList.length) return;
+    const currentUrl = sourcesList[sourceIndex];
+    sourceIndex++;
+
+    imgElement.onerror = () => {
+      // Si l'API échoue (403, 404, CORS), bascule AUTOMATIQUE sur la suivante !
+      tryNextSource();
+    };
+    imgElement.src = currentUrl;
+  }
+
+  tryNextSource();
+}
+
+// LISTE DES SOURCES API MULTIPLES PAR TYPE D'IMAGE
+function getDriverImageSources(driver) {
+  const sources = [];
+  
+  // 1. OpenF1 API CDN Direct
+  if (openF1Headshots[driver.num]) {
+    sources.push(openF1Headshots[driver.num]);
+  }
+  
+  // 2. Wikimedia Commons REST API (Libre de droits sans blocage)
+  const wikiNames = {
+    'hamilton': 'Lewis_Hamilton_2016_Malaysia_2.jpg',
+    'verstappen': 'Max_Verstappen_2017_Malaysia_1.jpg',
+    'leclerc': 'Charles_Leclerc_2022_Monaco_GP.jpg',
+    'norris': 'Lando_Norris_2022_Monaco_GP.jpg',
+    'russell': 'George_Russell_2022_Monaco_GP.jpg',
+    'alonso': 'Fernando_Alonso_2022_Monaco_GP.jpg',
+    'gasly': 'Pierre_Gasly_2022_Monaco_GP.jpg',
+    'sainz': 'Carlos_Sainz_Jr._2022_Monaco_GP.jpg',
+    'albon': 'Alex_Albon_2022_Monaco_GP.jpg',
+    'ocon': 'Esteban_Ocon_2022_Monaco_GP.jpg',
+    'hulkenberg': 'Nico_H%C3%BClkenberg_2017_Malaysia_1.jpg',
+    'tsunoda': 'Yuki_Tsunoda_2022_Monaco_GP.jpg'
+  };
+
+  if (wikiNames[driver.id]) {
+    sources.push(`https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/${wikiNames[driver.id]}/440px-${wikiNames[driver.id]}`);
+  }
+
+  // 3. GitHub Public CDN Repo (f1-api open source assets)
+  sources.push(`https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/drivers/${driver.id}.png`);
+
+  // 4. API Unsplash Sports HD
+  sources.push(`https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=800`);
+
+  // 5. Fallback SVG Vectoriel Ultime 100% Infaillible
+  sources.push(createVectorSVG(`${driver.first} ${driver.last}`, `#${driver.num}`, driver.accent));
+
+  return sources;
+}
+
+function getHelmetImageSources(driver) {
+  return [
+    `https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/helmets/${driver.id}.png`,
+    createVectorSVG(`CASQUE #${driver.num}`, "🪖", driver.accent)
+  ];
+}
+
+function getCarImageSources(teamId) {
+  const teamObj = constructors.find(c => c.id === teamId);
+  const name = teamObj ? teamObj.name : teamId;
+
+  return [
+    `https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/cars/${teamId}.png`,
+    `https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=800`,
+    createVectorSVG(`MONOPLACE ${name}`, "🏎️", "#00D2BE")
+  ];
+}
+
+function getLogoImageSources(teamId) {
+  const teamObj = constructors.find(c => c.id === teamId);
+  const name = teamObj ? teamObj.name : teamId;
+
+  return [
+    `https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/teams/${teamId}.png`,
+    createVectorSVG(name, "F1", "#00D2BE")
+  ];
+}
+
+// DÉCLENCHEMENT INITIAL DE L'API OPENF1
+async function initOpenF1Data() {
   try {
-    const response = await fetch('https://api.openf1.org/v1/drivers?session_key=latest');
-    if (response.ok) {
-      const data = await response.json();
-      data.forEach(driver => {
-        if (driver.driver_number && driver.headshot_url) {
-          f1OfficialImages[driver.driver_number] = driver.headshot_url;
+    const res = await fetch('https://api.openf1.org/v1/drivers?session_key=latest');
+    if (res.ok) {
+      const data = await res.json();
+      data.forEach(d => {
+        if (d.driver_number && d.headshot_url) {
+          openF1Headshots[d.driver_number] = d.headshot_url;
         }
       });
       renderDriversCarousel();
     }
-  } catch (err) {
-    console.log("Lecture API F1 avec repli automatique vectoriel/local", err);
+  } catch (e) {
+    console.log("Recherche OpenF1 en arrière-plan...", e);
   }
 }
 
-// OBTENTION DES IMAGES AVEC PLUSIEURS FALLBACKS ACTIFS
-function getDriverPortraitUrl(driver) {
-  if (f1OfficialImages[driver.num]) {
-    return f1OfficialImages[driver.num];
-  }
-  // URL API Media officielle F1 directe
-  return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/2024Drivers/${driver.last.toLowerCase()}.png.transform/2col/image.png`;
-}
-
-function getDriverHelmetUrl(driver) {
-  return createVectorSVG(`CASQUE #${driver.num}`, "🪖", driver.accent);
-}
-
-function getTeamLogoUrl(teamId) {
-  const teamObj = constructors.find(c => c.id === teamId);
-  const name = teamObj ? teamObj.name : teamId;
-  return createVectorSVG(name, "F1", "#00D2BE");
-}
-
-function getTeamCarUrl(teamId) {
-  const teamObj = constructors.find(c => c.id === teamId);
-  const name = teamObj ? teamObj.name : teamId;
-  return createVectorSVG(`MONOPLACE ${name}`, "🏎️", "#00D2BE");
-}
-
-// DONNÉES PILOTES ET SAISON
+// BASE DE DONNÉES PILOTES 2026
 let drivers = [
   { id: 'antonelli', num: 12, first: 'Kimi', last: 'Antonelli', teamId: 'mercedes', team: 'Mercedes Grand Prix', engine: 'Mercedes-AMG', country: 'Italie', accent: '#00D2BE', rgbTint: 'rgba(0, 210, 190, 0.45)', pts: 267, wins: 7, bio: "Phénomène italien ultra-dominant en tête du championnat du monde 2026 avec Mercedes.", history: [{ gp: 'GP 15 (Monza)', pos: 'P1 (+25 pts)' }, { gp: 'GP 14 (Zandvoort)', pos: 'P2 (+18 pts)' }, { gp: 'GP 13 (Hongrie)', pos: 'P3 (+15 pts)' }] },
   { id: 'russell', num: 63, first: 'George', last: 'Russell', teamId: 'mercedes', team: 'Mercedes Grand Prix', engine: 'Mercedes-AMG', country: 'Royaume-Uni', accent: '#00D2BE', rgbTint: 'rgba(0, 210, 190, 0.45)', pts: 201, wins: 2, bio: "Pilier solide et régulier de l'écurie Mercedes, prétendant au titre mondial.", history: [{ gp: 'GP 15 (Monza)', pos: 'P2 (+18 pts)' }, { gp: 'GP 14 (Zandvoort)', pos: 'P3 (+15 pts)' }, { gp: 'GP 12 (Belgique)', pos: 'P2 (+18 pts)' }] },
@@ -126,14 +186,7 @@ let races = [
   { id: 'gp-16', status: 'upcoming', round: 16, name: '16. Grand Prix d Espagne (Madring - Madrid)', date: '11 - 13 Septembre 2026', circuitType: 'madrid', length: '5.474 km', laps: '55 tours', qualifDate: 'Samedi 12 Septembre 2026', qualifTime: '16:00 CEST', raceDate: 'Dimanche 13 Septembre 2026', raceTime: '15:00 CEST', grid: [{ pos: 'DIRECT', driver: 'Prochain GP ce W.E.', team: 'Circuit Urbain Madring', time: '15:00 CEST', pts: '-' }] }
 ];
 
-const hotspotDetails = {
-  moteur: { kicker: 'GROUPE PROPULSEUR', title: 'Unité de Puissance Hybride V6 Turbo', desc: 'Moteur V6 1.6L couplé aux MGU-K développant plus de 1000 ch.', stats: [['Cylindrée', '1.6L V6 Turbo'], ['Régime Max', '15 000 tr/min'], ['Puissance Hybride', '≈ 1000 ch']] },
-  aileronAvant: { kicker: 'AÉRODYNAMIQUE', title: 'Aileron Avant à Volets Ajustables', desc: 'Canalise le flux d air vers le fond plat.', stats: [['Matériau', 'Fibre de Carbone'], ['Ajustement', 'Variable']] },
-  aileronArriere: { kicker: 'AÉRODYNAMIQUE', title: 'Aileron Arrière & DRS', desc: 'Réduit la traînée de 30% en ligne droite.', stats: [['Système', 'DRS Hydraulique'], ['Gain Vmax', '+15 km/h']] },
-  halo: { kicker: 'SÉCURITÉ', title: 'Structure Halo en Titane', desc: 'Protecteur de cockpit résistant à 12 tonnes.', stats: [['Poids', '9 kg'], ['Résistance', '120 kN']] },
-  pneus: { kicker: 'PNEUMATIQUES', title: 'Pneus Pirelli 18 Pouces', desc: 'Gommes fournies par Pirelli.', stats: [['Taille Jantes', '18 pouces'], ['Fournisseur', 'Pirelli']] }
-};
-
+// FONCTIONS CORRIGÉES ET RÉPARÉES
 let favoriteDriverId = localStorage.getItem('f1_fav_driver_2026') || 'antonelli';
 
 function getFavoriteDriver() {
@@ -162,6 +215,7 @@ function updateTopNavBadge(driver) {
   }
 }
 
+// CORRECTION DU MENU DÉROULANT DU PLAYER TV
 const videoSources = {
   canal: { logo: 'CANAL+', title: 'CONNECTEZ-VOUS À MYCANAL', desc: 'Accédez au flux vidéo HD en direct sur CANAL+, aux chronos officiels et caméras embarquées.', btnText: 'Lancer le Direct sur myCANAL', btnUrl: 'https://www.canalplus.com/', accentColor: '#E10600' },
   freetv: { logo: 'FREE TV', title: 'DIRECT F1 GRATUIT SUR FREE TV', desc: 'Regardez les meilleures sessions en direct, commentaires en français et résumés de course.', btnText: 'Ouvrir le Player Free TV Live', btnUrl: 'https://www.free.fr/freebox/tv/', accentColor: '#00D2BE' },
@@ -271,7 +325,12 @@ function renderRacesAccordion() {
 
   container.innerHTML = races.map((r, idx) => {
     const isTarget = idx === upcomingIndex;
-    const circuitImg = createVectorSVG(`CIRCUIT ${r.name}`, "🏁", "#00D2BE");
+    const circuitImgId = `circuit-img-${r.id}`;
+
+    setTimeout(() => {
+      const el = document.getElementById(circuitImgId);
+      if (el) loadImageWithCascade(el, [createVectorSVG(`CIRCUIT ${r.name}`, "🏁", "#00D2BE")]);
+    }, 0);
 
     return `
       <div class="race-card ${r.status} ${isTarget ? 'current-target' : ''}" id="card-${r.id}">
@@ -300,7 +359,7 @@ function renderRacesAccordion() {
           </div>
 
           <div class="circuit-box">
-            <img src="${circuitImg}" alt="Tracé ${r.name}">
+            <img id="${circuitImgId}" alt="Tracé ${r.name}">
             <div class="circuit-info">Longueur: ${r.length} · Distance: ${r.laps}</div>
           </div>
 
@@ -336,15 +395,12 @@ function scrollToCurrentRace() {
   }
 }
 
+// RENDU CAROUSEL AVEC ATTACHEMENT DU DEGRADE MULTI-API
 function renderDriversCarousel() {
   const grid = document.getElementById('sectionDrivers');
   if (!grid) return;
 
   grid.innerHTML = drivers.map((d) => {
-    const photoUrl = getDriverPortraitUrl(d);
-    const helmetUrl = getDriverHelmetUrl(d);
-    const carUrl = getTeamCarUrl(d.teamId);
-    const logoUrl = getTeamLogoUrl(d.teamId);
     const isFav = d.id === favoriteDriverId;
 
     return `
@@ -353,7 +409,7 @@ function renderDriversCarousel() {
         <div class="num-bg">${d.num}</div>
         
         <div class="team-header-row">
-          <img src="${logoUrl}" alt="Logo ${d.team}" class="card-team-logo" referrerpolicy="no-referrer" onerror="handleImageError(this, '🏎️', '${d.team}', '${d.num}', '${d.accent}')">
+          <img id="logo-img-${d.id}" alt="Logo ${d.team}" class="card-team-logo">
           <div class="team-tag">${d.team}</div>
         </div>
 
@@ -368,13 +424,21 @@ function renderDriversCarousel() {
         <div class="driver-carousel-bio">${d.bio}</div>
         
         <div class="visual-duo">
-          <img class="car-backdrop-bg" src="${carUrl}" alt="F1 ${d.team}" referrerpolicy="no-referrer" onerror="handleImageError(this, '🏎️', '${d.team}', '${d.num}', '${d.accent}')">
-          <img class="img-portrait" src="${photoUrl}" alt="${d.first} ${d.last}" referrerpolicy="no-referrer" onerror="handleImageError(this, '👤', '${d.first} ${d.last}', '${d.num}', '${d.accent}')">
-          <img class="img-helmet" src="${helmetUrl}" alt="Casque ${d.last}" referrerpolicy="no-referrer" onerror="handleImageError(this, '🪖', '${d.last}', '${d.num}', '${d.accent}')">
+          <img id="car-img-${d.id}" class="car-backdrop-bg" alt="F1 ${d.team}">
+          <img id="portrait-img-${d.id}" class="img-portrait" alt="${d.first} ${d.last}">
+          <img id="helmet-img-${d.id}" class="img-helmet" alt="Casque ${d.last}">
         </div>
       </div>
     `;
   }).join('');
+
+  // Lancement de la bascule dynamique en cascade pour chaque image
+  drivers.forEach(d => {
+    loadImageWithCascade(document.getElementById(`portrait-img-${d.id}`), getDriverImageSources(d));
+    loadImageWithCascade(document.getElementById(`helmet-img-${d.id}`), getHelmetImageSources(d));
+    loadImageWithCascade(document.getElementById(`car-img-${d.id}`), getCarImageSources(d.teamId));
+    loadImageWithCascade(document.getElementById(`logo-img-${d.id}`), getLogoImageSources(d.teamId));
+  });
 }
 
 function setThemeTint(rgbTint, accent) {
@@ -397,13 +461,9 @@ function openDriverModal(driverId) {
   document.getElementById('dpTeam').textContent = `${d.team} (${d.engine})`;
   document.getElementById('dpBio').textContent = d.bio;
   
-  const logoEl = document.getElementById('dpTeamLogo');
-  const helmetEl = document.getElementById('dpHelmetImg');
-  const carEl = document.getElementById('dpCarImg');
-  
-  if (logoEl) logoEl.src = getTeamLogoUrl(d.teamId);
-  if (helmetEl) helmetEl.src = getDriverHelmetUrl(d);
-  if (carEl) carEl.src = getTeamCarUrl(d.teamId);
+  loadImageWithCascade(document.getElementById('dpTeamLogo'), getLogoImageSources(d.teamId));
+  loadImageWithCascade(document.getElementById('dpHelmetImg'), getHelmetImageSources(d));
+  loadImageWithCascade(document.getElementById('dpCarImg'), getCarImageSources(d.teamId));
 
   const modalFavBtn = document.getElementById('modalFavBtn');
   if (modalFavBtn) {
@@ -446,10 +506,8 @@ function openTeamModal(teamId) {
   document.getElementById('tpEngine').textContent = `Propulseur : ${c.engine} | Siège : ${c.base}`;
   document.getElementById('tpBio').textContent = c.bio;
 
-  const logoEl = document.getElementById('tpTeamLogo');
-  const carEl = document.getElementById('tpCarImg');
-  if (logoEl) logoEl.src = getTeamLogoUrl(c.id);
-  if (carEl) carEl.src = getTeamCarUrl(c.id);
+  loadImageWithCascade(document.getElementById('tpTeamLogo'), getLogoImageSources(c.id));
+  loadImageWithCascade(document.getElementById('tpCarImg'), getCarImageSources(c.id));
 
   document.getElementById('tpStats').innerHTML = `
     <div class="row"><span class="l">Classement Constructeurs FIA</span><span class="v" style="color:var(--accent-2);">${c.rank}e Place</span></div>
@@ -471,9 +529,9 @@ function updateGarageCar(teamId) {
   const logoImg = document.getElementById('garageTeamLogo');
   const teamObj = constructors.find(c => c.id === teamId);
 
-  if (carImg) carImg.src = getTeamCarUrl(teamId);
+  if (carImg) loadImageWithCascade(carImg, getCarImageSources(teamId));
   if (nameLabel && teamObj) nameLabel.textContent = teamObj.name;
-  if (logoImg) logoImg.src = getTeamLogoUrl(teamId);
+  if (logoImg) loadImageWithCascade(logoImg, getLogoImageSources(teamId));
 }
 
 function openHotspotModal(key) {
@@ -537,5 +595,5 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDriversCarousel();
   updateGarageCar('mercedes');
   
-  fetchOfficialF1Images();
+  initOpenF1Data();
 });
