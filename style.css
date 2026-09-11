@@ -3,12 +3,12 @@
 @property --team-tint { syntax: '<color>'; inherits: true; initial-value: rgba(0, 210, 190, 0.45); }
 
 :root {
-  --void: #121622;
-  --panel: #1a202c;
-  --panel-2: #232a3a;
+  --void: #0e111a;
+  --panel: #161c28;
+  --panel-2: #1f2736;
   --ink: #ffffff;
-  --ink-dim: #a3adc2;
-  --line: rgba(255, 255, 255, 0.18);
+  --ink-dim: #9da8be;
+  --line: rgba(255, 255, 255, 0.15);
   --accent: #00D2BE;
   --accent-2: #F4C10F;
   --team-tint: rgba(0, 210, 190, 0.45);
@@ -32,27 +32,31 @@ body {
 h1, h2, h3, h4, .display { font-family: 'Titillium Web', sans-serif; }
 button { font-family: inherit; cursor: pointer; }
 
-/* NAV & MENU DÉROULANT PILOTE */
+/* NAV & MENU DÉROULANT */
 .nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px clamp(16px, 4vw, 48px);
-  background: rgba(18, 22, 34, 0.95); backdrop-filter: blur(16px);
+  background: rgba(14, 17, 26, 0.95); backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);
-  gap: 12px;
+  gap: 16px;
 }
-.nav .brand { font-weight: 900; font-size: 16px; letter-spacing: .12em; color: var(--ink); white-space: nowrap; }
+.nav .brand { font-weight: 900; font-size: 17px; letter-spacing: .12em; color: var(--ink); white-space: nowrap; }
 .nav .brand span { color: var(--accent); }
 
-.driver-dropdown-wrapper { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.08); padding: 4px 12px; border-radius: 8px; border: 1px solid var(--line); }
-.driver-dropdown-label { font-size: 11px; font-weight: 800; color: var(--accent-2); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-.driver-select-nav {
+.driver-dropdown-box {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255, 255, 255, 0.06); padding: 6px 14px;
+  border-radius: 8px; border: 1px solid var(--line);
+}
+.dropdown-label { font-size: 11px; font-weight: 800; color: var(--accent-2); text-transform: uppercase; white-space: nowrap; }
+.driver-select {
   background: var(--panel-2); color: #ffffff; border: 1px solid var(--accent);
-  padding: 6px 12px; border-radius: 6px; font-weight: 800; font-size: 13px;
-  outline: none; cursor: pointer; max-width: 220px; text-overflow: ellipsis;
+  padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 13px;
+  outline: none; cursor: pointer; max-width: 240px; text-overflow: ellipsis;
   transition: all 0.3s ease;
 }
-.driver-select-nav:hover, .driver-select-nav:focus { box-shadow: 0 0 12px var(--accent); border-color: #fff; }
+.driver-select:hover, .driver-select:focus { box-shadow: 0 0 12px var(--accent); border-color: #fff; }
 
 .nav .live {
   display: flex; align-items: center; gap: 8px;
@@ -65,21 +69,10 @@ button { font-family: inherit; cursor: pointer; }
 .nav .live .n { color: var(--accent); font-size: 18px; font-weight: 900; }
 .nav .live .name { font-size: 13px; color: var(--ink); font-weight: 800; }
 
-.driver-bar-selector {
-  background: var(--panel-2); border-y: 1px solid var(--line);
-  padding: 10px 24px; display: flex; align-items: center; justify-content: center; gap: 12px;
-}
-.selector-title { font-size: 12px; font-weight: 800; color: var(--accent); letter-spacing: 0.08em; }
-.driver-select-bar {
-  background: var(--void); color: #fff; border: 1px solid var(--line);
-  padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 13px; width: min(320px, 90vw);
-  cursor: pointer; outline: none;
-}
-.driver-select-bar:hover { border-color: var(--accent); }
-
+/* BROADCAST SECTION */
 .broadcast-section {
   position: relative;
-  padding: 90px clamp(20px, 5vw, 60px) 40px;
+  padding: 95px clamp(20px, 5vw, 60px) 40px;
   min-height: 100vh;
   display: flex; flex-direction: column; justify-content: space-between;
 }
@@ -122,7 +115,7 @@ button { font-family: inherit; cursor: pointer; }
 .broadcast-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; }
 
 .video-container {
-  width: 100%; aspect-ratio: 16 / 9; border-radius: 10px; background: #0e1118;
+  width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; background: #080a10;
   border: 1px solid var(--line); overflow: hidden;
   box-shadow: 0 20px 45px rgba(0,0,0,0.5);
 }
@@ -130,7 +123,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 100%; height: 100%; display: flex; flex-direction: column;
   justify-content: space-between; padding: 20px;
   background: radial-gradient(circle at center, rgba(26,32,44,0.4) 0%, rgba(14,17,24,0.95) 100%),
-              url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200') center/cover no-repeat;
+              url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Mercedes_F1_W13_2022_Monaco_GP.jpg/1200px-Mercedes_F1_W13_2022_Monaco_GP.jpg') center/cover no-repeat;
   transition: all 0.4s ease;
 }
 
@@ -159,7 +152,7 @@ button { font-family: inherit; cursor: pointer; }
 .btn-canal:hover { transform: translateY(-2px); }
 
 .live-info-panel {
-  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px;
   display: flex; flex-direction: column; height: 490px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
@@ -262,73 +255,111 @@ button { font-family: inherit; cursor: pointer; }
 }
 @keyframes bounceUp { 0%, 100% { transform: translateY(0) rotate(45deg); } 50% { transform: translateY(-7px) rotate(45deg); } }
 
-.grid-select {
-  height: 100vh; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-  position: relative; background: #0c0f17;
+/* SECTION CARROUSEL / MENU COULISSANT HORIZONTAL PILOTES */
+.carousel-section {
+  padding: 80px clamp(20px, 5vw, 60px);
+  background: #090c14;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
-.grid-select::-webkit-scrollbar { display: none; }
+.carousel-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+}
+.carousel-title-group h2 { font-size: clamp(22px, 3vw, 34px); font-weight: 900; color: #fff; }
+.carousel-title-group p { font-size: 13px; color: var(--ink-dim); margin-top: 4px; }
 
-.driver-card {
-  position: relative; min-width: 100vw; height: 100vh; scroll-snap-align: center;
-  display: flex; flex-direction: column; justify-content: center; padding: 0 clamp(24px, 7vw, 90px); overflow: hidden;
-  background: radial-gradient(circle at 75% 50%, color-mix(in srgb, var(--card-accent) 30%, transparent), transparent 60%);
+.carousel-controls { display: flex; gap: 12px; }
+.carousel-btn {
+  background: var(--panel-2); color: #fff; border: 1px solid var(--accent);
+  padding: 10px 20px; border-radius: 8px; font-weight: 800; font-size: 13px;
+  transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
-.driver-card .num-bg {
-  position: absolute; right: clamp(-20px, 0vw, 40px); top: 50%; transform: translateY(-50%);
-  font-size: min(58vw, 500px); font-weight: 900; line-height: 1; color: transparent;
-  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.12); font-family: 'Titillium Web', sans-serif;
+.carousel-btn:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
+
+/* CONTENEUR COULISSANT HORIZONTAL */
+.carousel-wrapper {
+  width: 100%; overflow-x: auto; scroll-behavior: smooth;
+  scroll-snap-type: x mandatory; padding-bottom: 20px;
+  scrollbar-width: thin; scrollbar-color: var(--accent) var(--panel-2);
+}
+.carousel-wrapper::-webkit-scrollbar { height: 8px; }
+.carousel-wrapper::-webkit-scrollbar-track { background: var(--panel-2); border-radius: 4px; }
+.carousel-wrapper::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+.carousel-track {
+  display: flex; gap: 24px; width: max-content;
+}
+
+/* CARTE PILOTE COULISSANTE DU CARROUSEL */
+.driver-card-slide {
+  scroll-snap-align: center;
+  width: min(85vw, 820px);
+  min-height: 540px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 32px clamp(20px, 4vw, 44px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+.driver-card-slide:hover {
+  border-color: var(--card-accent);
+}
+
+.driver-card-slide .num-bg {
+  position: absolute; right: 20px; top: 10px;
+  font-size: 200px; font-weight: 900; line-height: 1; color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.08); font-family: 'Titillium Web', sans-serif;
   user-select: none; pointer-events: none;
 }
-.driver-card .stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: linear-gradient(180deg, var(--card-accent), transparent); }
-
-.team-header-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; z-index: 3; }
-.card-team-logo { height: 36px; max-width: 140px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
-.driver-card .team-tag { font-size: 13px; font-weight: 800; letter-spacing: .14em; color: var(--card-accent); text-transform: uppercase; }
-
-.driver-card .eyebrow { font-size: 13px; color: var(--ink-dim); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; z-index: 3; }
-.driver-card .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--card-accent); box-shadow: 0 0 10px var(--card-accent); }
-.driver-card h2 { font-size: clamp(38px, 6.5vw, 88px); font-weight: 900; line-height: 1.02; max-width: 12ch; z-index: 3; color: #fff; }
-.driver-card h2 em { font-style: normal; color: var(--card-accent); display: block; text-shadow: 0 0 25px rgba(0,0,0,0.8); }
-.driver-card .team { margin-top: 14px; font-size: 15px; color: var(--ink-dim); max-width: 32ch; z-index: 3; }
-
-.card-fav-btn {
-  margin-top: 12px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-accent);
-  color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 800;
-  cursor: pointer; z-index: 4; width: fit-content; transition: all 0.2s;
+.driver-card-slide .stripe {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+  background: var(--card-accent);
 }
-.card-fav-btn:hover { background: var(--card-accent); transform: scale(1.05); }
+
+.team-header-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; z-index: 3; }
+.card-team-logo { height: 32px; max-width: 130px; object-fit: contain; }
+.driver-card-slide .team-tag { font-size: 13px; font-weight: 800; letter-spacing: .12em; color: var(--card-accent); text-transform: uppercase; }
+
+.driver-card-slide .eyebrow { font-size: 13px; color: var(--ink-dim); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; z-index: 3; }
+.driver-card-slide .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--card-accent); }
+.driver-card-slide h3 { font-size: clamp(32px, 4vw, 56px); font-weight: 900; line-height: 1.05; max-width: 14ch; z-index: 3; color: #fff; }
+.driver-card-slide h3 em { font-style: normal; color: var(--card-accent); display: block; }
 
 .driver-carousel-bio {
-  margin-top: 14px; max-width: 480px; font-size: 13px; line-height: 1.6;
-  color: #e2e8f0; background: rgba(18,22,34,0.82); padding: 14px 18px;
+  margin-top: 14px; max-width: 440px; font-size: 13px; line-height: 1.6;
+  color: #e2e8f0; background: rgba(14, 17, 26, 0.85); padding: 14px 18px;
   border-radius: 8px; border-left: 4px solid var(--card-accent); z-index: 3;
-  backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
 }
 
-.visual-duo {
-  position: absolute; right: clamp(10px, 4vw, 80px); bottom: 0;
-  height: clamp(360px, 72vh, 760px); width: clamp(420px, 55vw, 880px);
-  z-index: 2; pointer-events: none; display: flex; align-items: flex-end; justify-content: flex-end;
+.visual-duo-slide {
+  position: absolute; right: 20px; bottom: 0; top: 0;
+  width: 48%; display: flex; align-items: flex-end; justify-content: flex-end;
+  pointer-events: none; z-index: 2;
 }
 
 .car-backdrop-bg {
-  position: absolute; bottom: 8%; right: 0; width: 95%; max-height: 52%;
-  object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.9));
-  z-index: 1; transition: all 0.5s ease; border-radius: 12px;
+  position: absolute; bottom: 12%; right: 0; width: 100%; max-height: 48%;
+  object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.9)); z-index: 1;
 }
 
 .img-portrait {
-  position: relative; z-index: 3; height: 92%; max-width: 480px; object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.95)); border-radius: 12px;
+  position: relative; z-index: 3; height: 90%; max-width: 320px; object-fit: contain;
+  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.95));
 }
 
 .img-helmet {
-  position: absolute; top: 8%; left: 0; z-index: 4;
-  height: clamp(90px, 18vh, 170px); width: auto; object-fit: contain;
-  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.85)); transform: rotate(-8deg);
-  transition: transform 0.3s ease; border-radius: 8px;
+  position: absolute; top: 12%; left: -20px; z-index: 4;
+  height: 110px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.8)); transform: rotate(-8deg);
 }
-.driver-card:hover .img-helmet { transform: rotate(0deg) scale(1.1); }
 
 .garage-section {
   position: relative; padding: 100px clamp(20px, 6vw, 80px) 60px; min-height: 100vh;
@@ -341,7 +372,7 @@ button { font-family: inherit; cursor: pointer; }
 .garage-header h3 { font-size: clamp(24px, 3vw, 34px); font-weight: 900; color: #fff; }
 
 .garage-stage {
-  position: relative; aspect-ratio: 16 / 9; max-height: 520px; border-radius: 10px;
+  position: relative; aspect-ratio: 16 / 9; max-height: 520px; border-radius: 12px;
   background: var(--panel); border: 1px solid var(--line); overflow: hidden;
   display: flex; align-items: center; justify-content: center; margin-bottom: 30px;
   box-shadow: inset 0 0 50px rgba(0,0,0,0.6);
@@ -424,7 +455,7 @@ button { font-family: inherit; cursor: pointer; }
 
 @media (max-width: 960px) {
   .nav { flex-wrap: wrap; }
-  .driver-select-nav { max-width: 140px; }
+  .driver-select { max-width: 150px; }
   .broadcast-grid { grid-template-columns: 1fr; }
-  .visual-duo { opacity: 0.35; right: -40px; }
+  .visual-duo-slide { opacity: 0.35; width: 60%; }
 }

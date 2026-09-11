@@ -1,5 +1,7 @@
-// V10 REAL PHOTOS CASCADING SYSTEM (100% VRAIES PHOTOS HD)
+// APP F1 2026 V11 — REORGANISATION COMPLETE DE L'ARCHITECTURE ET DES ASSETS
+const openF1Headshots = {};
 
+// CHARGEMENT EN CASCADE SANS AUCUNE IMAGE D'UNSPLASH INPERTINENTE OU NON F1
 function loadImageWithCascade(imgElement, sourcesList) {
   if (!imgElement || !sourcesList || sourcesList.length === 0) return;
 
@@ -10,7 +12,6 @@ function loadImageWithCascade(imgElement, sourcesList) {
     const currentUrl = sourcesList[sourceIndex++];
 
     imgElement.onerror = () => {
-      // Si l'URL de la photo réelle échoue, bascule automatique sur la photo de secours suivante !
       tryNextSource();
     };
     imgElement.src = currentUrl;
@@ -19,134 +20,134 @@ function loadImageWithCascade(imgElement, sourcesList) {
   tryNextSource();
 }
 
-// MAPPING DES PHOTOS RÉELLES DE PILOTES (WIKIMEDIA HD + ESPN REAL PHOTOS + PUBLIC PRESS ASSETS)
-const realDriverPhotos = {
-  hamilton: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Lewis_Hamilton_2022_Monaco_GP.jpg/800px-Lewis_Hamilton_2022_Monaco_GP.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Lewis_Hamilton_2016_Malaysia_2.jpg/800px-Lewis_Hamilton_2016_Malaysia_2.jpg",
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800"
-  ],
-  verstappen: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Max_Verstappen_2017_Malaysia_1.jpg/800px-Max_Verstappen_2017_Malaysia_1.jpg",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800"
-  ],
-  leclerc: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Charles_Leclerc_2022_Monaco_GP.jpg/800px-Charles_Leclerc_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800"
-  ],
-  norris: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Lando_Norris_2022_Monaco_GP.jpg/800px-Lando_Norris_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800"
-  ],
-  russell: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/George_Russell_2022_Monaco_GP.jpg/800px-George_Russell_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800"
-  ],
-  alonso: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Fernando_Alonso_2022_Monaco_GP.jpg/800px-Fernando_Alonso_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800"
-  ],
-  sainz: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Carlos_Sainz_Jr._2022_Monaco_GP.jpg/800px-Carlos_Sainz_Jr._2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800"
-  ],
-  gasly: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Pierre_Gasly_2022_Monaco_GP.jpg/800px-Pierre_Gasly_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?q=80&w=800"
-  ],
-  albon: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Alex_Albon_2022_Monaco_GP.jpg/800px-Alex_Albon_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800"
-  ],
-  ocon: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Esteban_Ocon_2022_Monaco_GP.jpg/800px-Esteban_Ocon_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=800"
-  ],
-  hulkenberg: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Nico_H%C3%BClkenberg_2017_Malaysia_1.jpg/800px-Nico_H%C3%BClkenberg_2017_Malaysia_1.jpg",
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800"
-  ],
-  tsunoda: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Yuki_Tsunoda_2022_Monaco_GP.jpg/800px-Yuki_Tsunoda_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800"
-  ]
-};
+// CARTE DE DÉPANNAGE ÉLÉGANTE ET 100% SPÉCIFIQUE AU PILOTE (SI AUCUN CDN COMPATIBLE EN ENTRÉE)
+function generateF1DriverBadge(driverName, driverNum, teamName, accentColor) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 650" width="100%" height="100%">
+    <defs>
+      <linearGradient id="bgGrad_${driverNum}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${accentColor}" stop-opacity="0.85"/>
+        <stop offset="100%" stop-color="#0e111a" stop-opacity="0.98"/>
+      </linearGradient>
+    </defs>
+    <rect width="100%" height="100%" rx="24" fill="url(#bgGrad_${driverNum})" stroke="${accentColor}" stroke-width="4"/>
+    <text x="450" y="240" font-family="'Titillium Web', sans-serif" font-weight="900" font-size="280" fill="#ffffff" opacity="0.08" text-anchor="end">${driverNum}</text>
+    <circle cx="250" cy="230" r="110" fill="none" stroke="${accentColor}" stroke-width="8" opacity="0.4"/>
+    <text x="250" y="260" font-family="'Titillium Web', sans-serif" font-weight="900" font-size="90" fill="#ffffff" text-anchor="middle">#${driverNum}</text>
+    <rect x="40" y="480" width="420" height="110" rx="16" fill="rgba(14,17,26,0.9)" stroke="${accentColor}" stroke-width="2"/>
+    <text x="250" y="525" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle">${driverName.toUpperCase()}</text>
+    <text x="250" y="560" font-family="'Titillium Web', sans-serif" font-weight="700" font-size="16" fill="${accentColor}" text-anchor="middle">${teamName.toUpperCase()}</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
 
-// VRAIES PHOTOS DE MONOPLACES EN ACTION SUR CIRCUIT (WIKIMEDIA HD + UNSPLASH HD REAL RACING)
-const realCarPhotos = {
-  mercedes: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Mercedes_F1_W13_2022_Monaco_GP.jpg/1200px-Mercedes_F1_W13_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200"
-  ],
-  ferrari: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Ferrari_F1-75_2022_Monaco_GP.jpg/1200px-Ferrari_F1-75_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200"
-  ],
-  redbull: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Red_Bull_RB18_2022_Monaco_GP.jpg/1200px-Red_Bull_RB18_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200"
-  ],
-  mclaren: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/McLaren_MCL36_2022_Monaco_GP.jpg/1200px-McLaren_MCL36_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200"
-  ],
-  alpine: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Alpine_A522_2022_Monaco_GP.jpg/1200px-Alpine_A522_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200"
-  ],
-  astonmartin: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Aston_Martin_AMR22_2022_Monaco_GP.jpg/1200px-Aston_Martin_AMR22_2022_Monaco_GP.jpg",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200"
-  ]
-};
+function generateF1CarBadge(teamName, accentColor) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="100%" height="100%">
+    <rect width="100%" height="100%" rx="16" fill="#161c28" stroke="${accentColor}" stroke-width="3"/>
+    <text x="400" y="140" font-family="'Titillium Web', sans-serif" font-weight="900" font-size="36" fill="#ffffff" text-anchor="middle" letter-spacing="3">MONOPLACE F1 2026</text>
+    <text x="400" y="190" font-family="'Inter', sans-serif" font-weight="800" font-size="22" fill="${accentColor}" text-anchor="middle">${teamName.toUpperCase()}</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
 
-// VRAIES PHOTOS DE CASQUES DE FORMULE 1
-const realHelmetPhotos = {
-  hamilton: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lewis_Hamilton_helmet_2017.jpg/600px-Lewis_Hamilton_helmet_2017.jpg",
-    "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=600"
-  ],
-  verstappen: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Max_Verstappen_helmet_2019.jpg/600px-Max_Verstappen_helmet_2019.jpg",
-    "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=600"
-  ],
-  generic: [
-    "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=600"
-  ]
-};
+function generateF1HelmetBadge(driverNum, accentColor) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="100%" height="100%">
+    <circle cx="150" cy="150" r="130" fill="#161c28" stroke="${accentColor}" stroke-width="4"/>
+    <text x="150" y="165" font-family="'Titillium Web', sans-serif" font-weight="900" font-size="70" fill="#ffffff" text-anchor="middle">#${driverNum}</text>
+    <text x="150" y="210" font-family="'Inter', sans-serif" font-weight="800" font-size="14" fill="${accentColor}" text-anchor="middle">CASQUE OFFICEL</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
 
+// RETOURNER SEULEMENT DES ASSETS F1 SPECIFIQUES ET PERTINENTS
 function getDriverImageSources(driver) {
-  if (realDriverPhotos[driver.id]) {
-    return realDriverPhotos[driver.id];
+  const sources = [];
+
+  // 1. OpenF1 Live API CDN
+  if (openF1Headshots[driver.num]) {
+    sources.push(openF1Headshots[driver.num]);
   }
-  return [
-    `https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800`,
-    `https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800`
-  ];
+
+  // 2. Wikimedia Commons Cropped F1 Driver Photos
+  const wikiMap = {
+    hamilton: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Lewis_Hamilton_2022_Monaco_GP.jpg/600px-Lewis_Hamilton_2022_Monaco_GP.jpg",
+    verstappen: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Max_Verstappen_2017_Malaysia_1.jpg/600px-Max_Verstappen_2017_Malaysia_1.jpg",
+    leclerc: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Charles_Leclerc_2022_Monaco_GP.jpg/600px-Charles_Leclerc_2022_Monaco_GP.jpg",
+    norris: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Lando_Norris_2022_Monaco_GP.jpg/600px-Lando_Norris_2022_Monaco_GP.jpg",
+    russell: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/George_Russell_2022_Monaco_GP.jpg/600px-George_Russell_2022_Monaco_GP.jpg",
+    alonso: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Fernando_Alonso_2022_Monaco_GP.jpg/600px-Fernando_Alonso_2022_Monaco_GP.jpg",
+    sainz: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Carlos_Sainz_Jr._2022_Monaco_GP.jpg/600px-Carlos_Sainz_Jr._2022_Monaco_GP.jpg",
+    gasly: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Pierre_Gasly_2022_Monaco_GP.jpg/600px-Pierre_Gasly_2022_Monaco_GP.jpg",
+    albon: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Alex_Albon_2022_Monaco_GP.jpg/600px-Alex_Albon_2022_Monaco_GP.jpg",
+    ocon: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Esteban_Ocon_2022_Monaco_GP.jpg/600px-Esteban_Ocon_2022_Monaco_GP.jpg",
+    hulkenberg: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Nico_H%C3%BClkenberg_2017_Malaysia_1.jpg/600px-Nico_H%C3%BClkenberg_2017_Malaysia_1.jpg",
+    tsunoda: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Yuki_Tsunoda_2022_Monaco_GP.jpg/600px-Yuki_Tsunoda_2022_Monaco_GP.jpg"
+  };
+
+  if (wikiMap[driver.id]) {
+    sources.push(wikiMap[driver.id]);
+  }
+
+  // 3. GitHub Open F1 Public API repo
+  sources.push(`https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/drivers/${driver.id}.png`);
+
+  // 4. Badge F1 vectoriel sur-mesure (Garantit 0% d'image hors-sujet !)
+  sources.push(generateF1DriverBadge(`${driver.first} ${driver.last}`, driver.num, driver.team, driver.accent));
+
+  return sources;
 }
 
 function getHelmetImageSources(driver) {
-  if (realHelmetPhotos[driver.id]) {
-    return realHelmetPhotos[driver.id];
-  }
-  return realHelmetPhotos.generic;
+  return [
+    `https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/helmets/${driver.id}.png`,
+    generateF1HelmetBadge(driver.num, driver.accent)
+  ];
 }
 
 function getCarImageSources(teamId) {
-  if (realCarPhotos[teamId]) {
-    return realCarPhotos[teamId];
-  }
-  return [
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200",
-    "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?q=80&w=1200"
-  ];
+  const teamObj = constructors.find(c => c.id === teamId);
+  const teamName = teamObj ? teamObj.name : teamId;
+  const accent = teamObj ? teamObj.accent : '#00D2BE';
+
+  const wikiCars = {
+    mercedes: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Mercedes_F1_W13_2022_Monaco_GP.jpg/1200px-Mercedes_F1_W13_2022_Monaco_GP.jpg",
+    ferrari: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Ferrari_F1-75_2022_Monaco_GP.jpg/1200px-Ferrari_F1-75_2022_Monaco_GP.jpg",
+    redbull: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Red_Bull_RB18_2022_Monaco_GP.jpg/1200px-Red_Bull_RB18_2022_Monaco_GP.jpg",
+    mclaren: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/McLaren_MCL36_2022_Monaco_GP.jpg/1200px-McLaren_MCL36_2022_Monaco_GP.jpg",
+    alpine: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Alpine_A522_2022_Monaco_GP.jpg/1200px-Alpine_A522_2022_Monaco_GP.jpg",
+    astonmartin: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Aston_Martin_AMR22_2022_Monaco_GP.jpg/1200px-Aston_Martin_AMR22_2022_Monaco_GP.jpg"
+  };
+
+  const sources = [];
+  if (wikiCars[teamId]) sources.push(wikiCars[teamId]);
+  sources.push(`https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/cars/${teamId}.png`);
+  sources.push(generateF1CarBadge(teamName, accent));
+
+  return sources;
 }
 
 function getLogoImageSources(teamId) {
   return [
     `https://raw.githubusercontent.com/marcussacana/f1-api/main/public/images/teams/${teamId}.png`,
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=400"
+    generateF1CarBadge(teamId, '#00D2BE')
   ];
+}
+
+// INITIALISATION EN ARRIÈRE PLAN D'OPENF1
+async function initOpenF1Data() {
+  try {
+    const res = await fetch('https://api.openf1.org/v1/drivers?session_key=latest');
+    if (res.ok) {
+      const data = await res.json();
+      data.forEach(d => {
+        if (d.driver_number && d.headshot_url) {
+          openF1Headshots[d.driver_number] = d.headshot_url;
+        }
+      });
+      renderDriversCarouselTrack();
+    }
+  } catch (e) {
+    console.log("Background OpenF1 Sync...", e);
+  }
 }
 
 // DONNÉES PILOTES ET SAISON 2026
@@ -177,17 +178,17 @@ let drivers = [
 ];
 
 let constructors = [
-  { id: 'mercedes', name: 'Mercedes Grand Prix', engine: 'Mercedes-AMG', principal: 'Toto Wolff', base: 'Brackley, Royaume-Uni', bio: "Flèches d'argent ultra-dominantes cette saison 2026." },
-  { id: 'ferrari', name: 'Scuderia Ferrari', engine: 'Ferrari', principal: 'Frédéric Vasseur', base: 'Maranello, Italie', bio: "La Scuderia historique en lutte pour les victoires." },
-  { id: 'mclaren', name: 'McLaren Racing', engine: 'Mercedes-AMG', principal: 'Andrea Stella', base: 'Woking, Royaume-Uni', bio: "Écurie britannique rapide et constante." },
-  { id: 'redbull', name: 'Red Bull Racing', engine: 'Red Bull Powertrains', principal: 'Christian Horner', base: 'Milton Keynes, Royaume-Uni', bio: "Puissance et ingénierie de pointe." },
-  { id: 'racingbulls', name: 'Racing Bulls', engine: 'Red Bull Powertrains', principal: 'Laurent Mekies', base: 'Faenza, Italie', bio: "Écurie sœur performante et dynamique." },
-  { id: 'alpine', name: 'Alpine F1 Team', engine: 'Renault / Alpine', principal: 'Oliver Oakes', base: 'Enstone, Royaume-Uni', bio: "Constructeur français engagé dans la performance." },
-  { id: 'haas', name: 'Haas F1 Team', engine: 'Ferrari', principal: 'Ayao Komatsu', base: 'Kannapolis, États-Unis', bio: "Équipe américaine agile et combative." },
-  { id: 'audi', name: 'Audi F1 Team', engine: 'Audi', principal: 'Mattia Binotto', base: 'Hinwil, Suisse / Neubourg, Allemagne', bio: "Le nouveau géant allemand en Formule 1." },
-  { id: 'williams', name: 'Williams Racing', engine: 'Mercedes-AMG', principal: 'James Vowles', base: 'Grove, Royaume-Uni', bio: "Nom légendaire en pleine reconstruction." },
-  { id: 'astonmartin', name: 'Aston Martin Cognizant F1 Team', engine: 'Mercedes-AMG', principal: 'Mike Krack', base: 'Silverstone, Royaume-Uni', bio: "Luxe et ambition technique britannique." },
-  { id: 'cadillac', name: 'Cadillac Formula 1 Team', engine: 'General Motors', principal: 'Directeur Général', base: 'Détroit, États-Unis', bio: "La nouvelle écurie américaine de pointe." }
+  { id: 'mercedes', name: 'Mercedes Grand Prix', engine: 'Mercedes-AMG', principal: 'Toto Wolff', base: 'Brackley, Royaume-Uni', accent: '#00D2BE', bio: "Flèches d'argent ultra-dominantes cette saison 2026." },
+  { id: 'ferrari', name: 'Scuderia Ferrari', engine: 'Ferrari', principal: 'Frédéric Vasseur', base: 'Maranello, Italie', accent: '#E10600', bio: "La Scuderia historique en lutte pour les victoires." },
+  { id: 'mclaren', name: 'McLaren Racing', engine: 'Mercedes-AMG', principal: 'Andrea Stella', base: 'Woking, Royaume-Uni', accent: '#FF8000', bio: "Écurie britannique rapide et constante." },
+  { id: 'redbull', name: 'Red Bull Racing', engine: 'Red Bull Powertrains', principal: 'Christian Horner', base: 'Milton Keynes, Royaume-Uni', accent: '#3671C6', bio: "Puissance et ingénierie de pointe." },
+  { id: 'racingbulls', name: 'Racing Bulls', engine: 'Red Bull Powertrains', principal: 'Laurent Mekies', base: 'Faenza, Italie', accent: '#6692FF', bio: "Écurie sœur performante et dynamique." },
+  { id: 'alpine', name: 'Alpine F1 Team', engine: 'Renault / Alpine', principal: 'Oliver Oakes', base: 'Enstone, Royaume-Uni', accent: '#0093CC', bio: "Constructeur français engagé dans la performance." },
+  { id: 'haas', name: 'Haas F1 Team', engine: 'Ferrari', principal: 'Ayao Komatsu', base: 'Kannapolis, États-Unis', accent: '#B6BABD', bio: "Équipe américaine agile et combative." },
+  { id: 'audi', name: 'Audi F1 Team', engine: 'Audi', principal: 'Mattia Binotto', base: 'Hinwil, Suisse / Neubourg, Allemagne', accent: '#52E252', bio: "Le nouveau géant allemand en Formule 1." },
+  { id: 'williams', name: 'Williams Racing', engine: 'Mercedes-AMG', principal: 'James Vowles', base: 'Grove, Royaume-Uni', accent: '#64C4FF', bio: "Nom légendaire en pleine reconstruction." },
+  { id: 'astonmartin', name: 'Aston Martin Cognizant F1 Team', engine: 'Mercedes-AMG', principal: 'Mike Krack', base: 'Silverstone, Royaume-Uni', accent: '#229971', bio: "Luxe et ambition technique britannique." },
+  { id: 'cadillac', name: 'Cadillac Formula 1 Team', engine: 'General Motors', principal: 'Directeur Général', base: 'Détroit, États-Unis', accent: '#999999', bio: "La nouvelle écurie américaine de pointe." }
 ];
 
 let races = [
@@ -228,7 +229,7 @@ function setFavoriteDriver(driverId) {
   localStorage.setItem('f1_fav_driver_2026', driverId);
   updateTopNavBadge(getFavoriteDriver());
   renderDriversTable();
-  renderDriversCarousel();
+  renderDriversCarouselTrack();
   populateDriverDropdowns();
 }
 
@@ -246,32 +247,87 @@ function updateTopNavBadge(driver) {
   }
 }
 
+// REMPLIR ET POPULER LE MENU DÉROULANT DES PILOTES
 function populateDriverDropdowns() {
   const navSelect = document.getElementById('driverSelectNav');
-  const barSelect = document.getElementById('driverSelectBar');
+  if (!navSelect) return;
 
-  const optionsHTML = drivers.map(d => `
+  navSelect.innerHTML = drivers.map(d => `
     <option value="${d.id}" ${d.id === favoriteDriverId ? 'selected' : ''}>
       #${d.num} ${d.first} ${d.last} (${d.team})
     </option>
   `).join('');
-
-  if (navSelect) navSelect.innerHTML = optionsHTML;
-  if (barSelect) barSelect.innerHTML = optionsHTML;
 }
 
+// ACTION QUAND ON SÉLECTIONNE DANS LE MENU DÉROULANT
 function selectDriverFromDropdown(driverId) {
   const d = drivers.find(x => x.id === driverId);
   if (!d) return;
 
   setFavoriteDriver(d.id);
 
-  const driverCardEl = document.getElementById(`card-driver-${d.id}`);
-  if (driverCardEl) {
-    driverCardEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  // Défiler de façon fluide jusqu'à la carte dans le carrousel
+  const cardSlide = document.getElementById(`slide-driver-${d.id}`);
+  if (cardSlide) {
+    cardSlide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
 
   updateGarageCar(d.teamId);
+}
+
+// NAVIGUER DANS LE CARROUSEL AVEC LES BOUTONS PRÉCÉDENT / SUIVANT
+function scrollCarousel(direction) {
+  const wrapper = document.getElementById('carouselWrapper');
+  if (!wrapper) return;
+  const cardWidth = 600;
+  wrapper.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+}
+
+// RENDU COMPLET DU CARROUSEL DES PILOTES
+function renderDriversCarouselTrack() {
+  const track = document.getElementById('carouselTrack');
+  if (!track) return;
+
+  track.innerHTML = drivers.map((d) => {
+    const isFav = d.id === favoriteDriverId;
+
+    return `
+      <div class="driver-card-slide" id="slide-driver-${d.id}" style="--card-accent:${d.accent}" onmouseenter="setThemeTint('${d.rgbTint}', '${d.accent}'); updateTopNavBadge(drivers.find(x => x.id === '${d.id}'))">
+        <div class="stripe"></div>
+        <div class="num-bg">${d.num}</div>
+
+        <div>
+          <div class="team-header-row">
+            <img id="logo-img-${d.id}" alt="Logo ${d.team}" class="card-team-logo">
+            <div class="team-tag">${d.team}</div>
+          </div>
+
+          <p class="eyebrow"><span class="dot"></span>${d.country}</p>
+          <h3>${d.first}<em>${d.last}</em></h3>
+
+          <button class="card-fav-btn" style="margin-top:14px;" onclick="setFavoriteDriver('${d.id}')">
+            ${isFav ? '⭐ Pilote Sélectionné' : '☆ Mettre en Favori'}
+          </button>
+        </div>
+
+        <div class="driver-carousel-bio">${d.bio}</div>
+
+        <div class="visual-duo-slide">
+          <img id="car-img-${d.id}" class="car-backdrop-bg" alt="Monoplace ${d.team}">
+          <img id="portrait-img-${d.id}" class="img-portrait" alt="${d.first} ${d.last}">
+          <img id="helmet-img-${d.id}" class="img-helmet" alt="Casque ${d.last}">
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Lancement du chargement des images
+  drivers.forEach(d => {
+    loadImageWithCascade(document.getElementById(`portrait-img-${d.id}`), getDriverImageSources(d));
+    loadImageWithCascade(document.getElementById(`helmet-img-${d.id}`), getHelmetImageSources(d));
+    loadImageWithCascade(document.getElementById(`car-img-${d.id}`), getCarImageSources(d.teamId));
+    loadImageWithCascade(document.getElementById(`logo-img-${d.id}`), getLogoImageSources(d.teamId));
+  });
 }
 
 const videoSources = {
@@ -387,7 +443,7 @@ function renderRacesAccordion() {
 
     setTimeout(() => {
       const el = document.getElementById(circuitImgId);
-      if (el) loadImageWithCascade(el, ["https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=800"]);
+      if (el) loadImageWithCascade(el, [generateF1CarBadge(r.name, '#00D2BE')]);
     }, 0);
 
     return `
@@ -451,50 +507,6 @@ function scrollToCurrentRace() {
   } else if (container) {
     container.scrollTo({ top: 0, behavior: 'smooth' });
   }
-}
-
-function renderDriversCarousel() {
-  const grid = document.getElementById('sectionDrivers');
-  if (!grid) return;
-
-  grid.innerHTML = drivers.map((d) => {
-    const isFav = d.id === favoriteDriverId;
-
-    return `
-      <div class="driver-card" id="card-driver-${d.id}" style="--card-accent:${d.accent}" onmouseenter="setThemeTint('${d.rgbTint}', '${d.accent}'); updateTopNavBadge(drivers.find(x => x.id === '${d.id}'))">
-        <div class="stripe"></div>
-        <div class="num-bg">${d.num}</div>
-        
-        <div class="team-header-row">
-          <img id="logo-img-${d.id}" alt="Logo ${d.team}" class="card-team-logo">
-          <div class="team-tag">${d.team}</div>
-        </div>
-
-        <p class="eyebrow"><span class="dot"></span>${d.country}</p>
-        <h2>${d.first}<em>${d.last}</em></h2>
-        <p class="team">Propulsé par <b>${d.engine}</b>.</p>
-
-        <button class="card-fav-btn" onclick="setFavoriteDriver('${d.id}')">
-          ${isFav ? '⭐ Pilote Favori' : '☆ Définir en Favori'}
-        </button>
-
-        <div class="driver-carousel-bio">${d.bio}</div>
-        
-        <div class="visual-duo">
-          <img id="car-img-${d.id}" class="car-backdrop-bg" alt="Monoplace ${d.team}">
-          <img id="portrait-img-${d.id}" class="img-portrait" alt="${d.first} ${d.last}">
-          <img id="helmet-img-${d.id}" class="img-helmet" alt="Casque ${d.last}">
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  drivers.forEach(d => {
-    loadImageWithCascade(document.getElementById(`portrait-img-${d.id}`), getDriverImageSources(d));
-    loadImageWithCascade(document.getElementById(`helmet-img-${d.id}`), getHelmetImageSources(d));
-    loadImageWithCascade(document.getElementById(`car-img-${d.id}`), getCarImageSources(d.teamId));
-    loadImageWithCascade(document.getElementById(`logo-img-${d.id}`), getLogoImageSources(d.teamId));
-  });
 }
 
 function setThemeTint(rgbTint, accent) {
@@ -648,7 +660,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDriversTable();
   renderConstructorsTable();
   renderRacesAccordion();
-  renderDriversCarousel();
+  renderDriversCarouselTrack();
   populateDriverDropdowns();
   updateGarageCar('mercedes');
+
+  initOpenF1Data();
 });

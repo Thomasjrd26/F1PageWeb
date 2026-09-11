@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
-  <title>Paddock F1 2026 — Hub Live & Photos Réelles HD</title>
+  <title>Paddock F1 2026 — Hub Live &amp; Carrousel Pilotes Officiel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Titillium+Web:ital,wght@0,600;0,700;0,900;1,700&display=swap" rel="stylesheet">
@@ -12,19 +12,20 @@
 </head>
 <body>
 
-  <!-- NAVIGATION FIXE -->
+  <!-- BARRE DE NAVIGATION FIXE ET MENU DÉROULANT PILOTES -->
   <nav class="nav">
     <div class="brand">PAD<span>DOCK</span> // 2026</div>
 
-    <!-- MENU DÉROULANT PILOTE -->
-    <div class="driver-dropdown-wrapper">
-      <label for="driverSelectNav" class="driver-dropdown-label">🏎️ PILOTE :</label>
-      <select id="driverSelectNav" class="driver-select-nav" onchange="selectDriverFromDropdown(this.value)">
+    <!-- MENU DÉROULANT INTÉGRÉ DANS LA NAV -->
+    <div class="driver-dropdown-box">
+      <label for="driverSelectNav" class="dropdown-label">🏎️ CHOISIR UN PILOTE :</label>
+      <select id="driverSelectNav" class="driver-select" onchange="selectDriverFromDropdown(this.value)">
+        <!-- Rempli dynamiquement par JS -->
       </select>
     </div>
 
-    <!-- BADGE PILOTE FAVORI -->
-    <div class="live" id="navLive" title="Pilote favori sélectionné">
+    <!-- BADGE PILOTE SÉLECTIONNÉ -->
+    <div class="live" id="navLive" title="Pilote sélectionné">
       <span class="star-badge" id="navStar">⭐</span>
       <span class="n" id="navNum">12</span>
       <span class="name" id="navName">Kimi Antonelli</span>
@@ -39,6 +40,7 @@
         <p class="live-status"><span class="pulse-dot"></span> PROCHAINE ÉPREUVE : GP D'ESPAGNE (MADRID) — 11-13 SEPTEMBRE 2026</p>
       </div>
 
+      <!-- Notifications GP -->
       <div class="notif-box">
         <label class="notif-label" for="notifToggle">
           <input type="checkbox" id="notifToggle" onchange="toggleNotifications(this)">
@@ -50,6 +52,7 @@
     </div>
 
     <div class="broadcast-grid">
+      <!-- Player TV -->
       <div class="video-container">
         <div class="video-player" id="videoPlayerBg">
           <div class="player-top-bar">
@@ -78,6 +81,7 @@
         </div>
       </div>
 
+      <!-- Live Info Panel -->
       <div class="live-info-panel">
         <div class="panel-tabs">
           <button class="tab-btn active" onclick="switchTab('drivers')">Pilotes</button>
@@ -85,6 +89,7 @@
           <button class="tab-btn" onclick="switchTab('races')">Calendrier FIA (25 GP)</button>
         </div>
 
+        <!-- Classement Pilotes -->
         <div class="tab-content active" id="tabDrivers">
           <table class="live-table">
             <thead>
@@ -100,6 +105,7 @@
           </table>
         </div>
 
+        <!-- Classement Constructeurs -->
         <div class="tab-content" id="tabConstructors">
           <table class="live-table">
             <thead>
@@ -114,6 +120,7 @@
           </table>
         </div>
 
+        <!-- Calendrier 25 GP -->
         <div class="tab-content" id="tabRaces">
           <div class="races-scroll-container" id="racesScrollContainer">
             <div class="scroll-hint-up" onclick="scrollToCurrentRace()">🎯 PROCHAIN GP EN DIRECT : MADRID (11-13 SEPT)</div>
@@ -123,27 +130,40 @@
       </div>
     </div>
 
-    <a href="#sectionDrivers" class="scroll-indicator down">
-      <span>Défilez vers le bas pour explorer la grille et les photos HD des pilotes</span>
+    <a href="#sectionCarousel" class="scroll-indicator down">
+      <span>Défilez vers le bas pour accéder au menu coulissant des pilotes</span>
       <span class="chevron-down"></span>
     </a>
   </section>
 
-  <!-- BARRE DE COMMANDE SECONDAIRE -->
-  <div class="driver-bar-selector">
-    <span class="selector-title">🔍 ACCÈS RAPIDE PILOTE :</span>
-    <select id="driverSelectBar" class="driver-select-bar" onchange="selectDriverFromDropdown(this.value)">
-    </select>
-  </div>
+  <!-- SECTION 2 : CARROUSEL / MENU COULISSANT DES PILOTES -->
+  <section class="carousel-section" id="sectionCarousel">
+    <div class="carousel-header">
+      <div class="carousel-title-group">
+        <h2>GRILLE DES PILOTES FORMULE 1 2026</h2>
+        <p>Faites défiler horizontalement ou utilisez les flèches et le menu déroulant pour naviguer.</p>
+      </div>
 
-  <!-- SECTION 2 : CAROUSEL PILOTES -->
-  <section class="grid-select" id="sectionDrivers"></section>
+      <!-- CONTROLES DE NAVIGATION DU CARROUSEL -->
+      <div class="carousel-controls">
+        <button class="carousel-btn" onclick="scrollCarousel(-1)" title="Pilote précédent">❮ Précédent</button>
+        <button class="carousel-btn" onclick="scrollCarousel(1)" title="Pilote suivant">Suivant ❯</button>
+      </div>
+    </div>
+
+    <!-- CONTENEUR COULISSANT HORIZONTAL (MENU SLIDER) -->
+    <div class="carousel-wrapper" id="carouselWrapper">
+      <div class="carousel-track" id="carouselTrack">
+        <!-- Rempli dynamiquement par app.js -->
+      </div>
+    </div>
+  </section>
 
   <!-- SECTION 3 : ATELIER INTERACTIF MONOPLACE -->
   <section class="garage-section" id="sectionGarage">
-    <a href="#sectionDirect" class="scroll-indicator up">
+    <a href="#sectionCarousel" class="scroll-indicator up">
       <span class="chevron-up"></span>
-      <span>Défilez vers le haut pour remonter au Direct &amp; Classements</span>
+      <span>Remonter au carrousel des pilotes</span>
     </a>
 
     <div class="garage-header">
@@ -165,11 +185,6 @@
       <button class="hotspot-btn" style="left: 42%; top: 35%;" onclick="openHotspotModal('halo')"><span>Halo &amp; Cockpit</span></button>
       <button class="hotspot-btn" style="left: 76%; top: 72%;" onclick="openHotspotModal('pneus')"><span>Pneus Pirelli</span></button>
     </div>
-
-    <a href="#sectionDrivers" class="scroll-indicator down">
-      <span>Défilez vers le haut pour retourner aux pilotes</span>
-      <span class="chevron-up"></span>
-    </a>
   </section>
 
   <div class="backdrop" id="backdrop" onclick="closeModal()"></div>
